@@ -76,20 +76,6 @@ export default function LandingPage() {
                 arrow_forward
               </span>
             </Link>
-
-            <a
-              href="https://wa.me/22890000000?text=Koko%2C%20bonjour%20je%20souhaite%20un%20conseil%20confidentiel"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface shadow-xs hover:shadow transition-all duration-300 border border-outline-variant/30"
-            >
-              <span className="material-symbols-outlined text-[20px] text-primary">
-                chat
-              </span>
-              <span className="font-label text-label-md font-semibold text-left">
-                Continuer sur WhatsApp Koko
-              </span>
-            </a>
           </div>
 
           <p className="font-body text-body-sm text-on-surface-variant flex items-center justify-center gap-1.5">
