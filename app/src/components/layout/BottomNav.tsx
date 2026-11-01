@@ -1,0 +1,47 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+export function BottomNav() {
+  const pathname = usePathname();
+
+  const tabs = [
+    { label: "Accueil", href: "/", icon: "home" },
+    { label: "Assistant", href: "/assistant-koko", icon: "chat_bubble" },
+    { label: "Carnet", href: "/carnet-intime", icon: "calendar_today" },
+    { label: "Cercle", href: "/le-cercle", icon: "diversity_1" },
+    { label: "Pass", href: "/pass-sante", icon: "qr_code" },
+  ];
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-lg border-t border-outline-variant/30 md:hidden py-1.5 px-3 flex items-center justify-around shadow-lg">
+      {tabs.map((tab) => {
+        const isActive = pathname === tab.href;
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all ${
+              isActive
+                ? "text-primary font-bold scale-105"
+                : "text-on-surface-variant hover:text-on-surface"
+            }`}
+          >
+            <span
+              className={`material-symbols-outlined text-[22px] ${
+                isActive ? "text-primary" : "text-on-surface-variant"
+              }`}
+            >
+              {tab.icon}
+            </span>
+            <span className="font-label text-[11px] leading-tight mt-0.5">
+              {tab.label}
+            </span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+

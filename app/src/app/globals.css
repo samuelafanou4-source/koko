@@ -1,0 +1,70 @@
+@import "material-symbols/outlined.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #cfeadb;
+    color: #1c1c19;
+    font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  main > :first-child {
+    margin-top: 0 !important;
+  }
+}
+
+/* Custom scrollbar hiding for clean low-bandwidth / mobile appearance */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Signature Arch Card: Porte de Confiance */
+.arch-card {
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+/* Discreet mode blur filter when active */
+.discreet-active .discreet-blur {
+  filter: blur(8px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 0.25s ease;
+}
+
+/* Inactivity veil overlay */
+.veil-active {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background-color: rgba(207, 234, 219, 0.88);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.35s ease;
+}

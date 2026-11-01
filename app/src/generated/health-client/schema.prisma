@@ -1,0 +1,139 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("HEALTH_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/health-client"
+}
+
+model CycleEntry {
+  id            String    @id @default(uuid())
+  anonId        String
+  startDate     DateTime
+  endDate       DateTime?
+  cycleLength   Int?
+  periodLength  Int?
+  flowIntensity String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([anonId])
+  @@map("cycle_entries")
+}
+
+model DailyLog {
+  id             String   @id @default(uuid())
+  anonId         String
+  date           DateTime
+  mood           String?
+  symptoms       String[]
+  encryptedNotes String?
+  notesIv        String?
+  notesAuthTag   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([anonId, date])
+  @@index([anonId])
+  @@map("daily_logs")
+}
+
+model ForumPost {
+  id             String   @id @default(uuid())
+  anonId         String
+  title          String
+  category       String
+  content        String
+  status         String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  reportsCount   Int      @default(0)
+  hugReactions   Int      @default(0)
+  meTooReactions Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  comments  ForumComment[]
+  reactions ForumReaction[]
+
+  @@index([anonId])
+  @@index([status])
+  @@map("forum_posts")
+}
+
+model ForumComment {
+  id        String    @id @default(uuid())
+  postId    String
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  anonId    String
+  content   String
+  status    String    @default("APPROVED")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([postId])
+  @@index([anonId])
+  @@map("forum_comments")
+}
+
+model ForumReaction {
+  id           String    @id @default(uuid())
+  postId       String
+  post         ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  anonId       String
+  reactionType String // HUG, ME_TOO
+  createdAt    DateTime  @default(now())
+
+  @@unique([postId, anonId, reactionType])
+  @@map("forum_reactions")
+}
+
+model AssistantMessage {
+  id               String   @id @default(uuid())
+  anonId           String
+  role             String // user, assistant
+  encryptedContent String
+  iv               String
+  authTag          String
+  isCrisis         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  @@index([anonId])
+  @@map("assistant_messages")
+}
+
+model HealthCenter {
+  id             String   @id @default(uuid())
+  name           String
+  description    String
+  city           String
+  address        String
+  latitude       Float
+  longitude      Float
+  phone          String
+  priceInfo      String
+  isGirlFriendly Boolean  @default(true)
+  isPartner      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  vouchers HealthVoucher[]
+
+  @@map("health_centers")
+}
+
+model HealthVoucher {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  anonId         String
+  healthCenterId String
+  healthCenter   HealthCenter @relation(fields: [healthCenterId], references: [id])
+  status         String       @default("ACTIVE") // ACTIVE, USED, EXPIRED
+  expiresAt      DateTime
+  usedAt         DateTime?
+  qrData         String
+  createdAt      DateTime     @default(now())
+
+  @@index([anonId])
+  @@index([code])
+  @@map("health_vouchers")
+}
