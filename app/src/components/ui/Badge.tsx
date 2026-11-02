@@ -23,7 +23,7 @@ export function Badge({
       className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-label text-label-sm font-semibold ${tones[tone]}`}
     >
       {icon ? (
-        <span className="material-symbols-outlined text-[14px]">{icon}</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-[14px]">{icon}</span>
       ) : null}
       {children}
     </span>

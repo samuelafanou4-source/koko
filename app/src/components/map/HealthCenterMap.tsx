@@ -79,7 +79,7 @@ const MapContent = dynamic(
                       {c.priceInfo}
                     </div>
                     {c.distanceKm !== undefined && (
-                      <div className="text-gray-500 text-[11px]">
+                      <div className="text-gray-500 text-label-sm">
                         À environ {c.distanceKm} km
                       </div>
                     )}

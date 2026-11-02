@@ -63,7 +63,7 @@ export function ChatBubble({ message }: { message: ChatMessage }) {
           {message.isCrisis && message.actions && message.actions.length > 0 && (
             <div className="mt-4 p-4 rounded-xl bg-tertiary-fixed/40 border border-tertiary-container/30 flex flex-col gap-2.5">
               <div className="flex items-center gap-2 text-tertiary font-headline text-headline-sm font-bold">
-                <span className="material-symbols-outlined text-[20px]">support</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-[20px]">support</span>
                 <span>Actions d&apos;urgence confidentielles</span>
               </div>
               <div className="flex flex-col gap-2 mt-1">
@@ -76,7 +76,7 @@ export function ChatBubble({ message }: { message: ChatMessage }) {
                         className="flex items-center justify-between px-4 py-2.5 rounded-full bg-tertiary text-on-tertiary font-label text-label-md hover:bg-tertiary-container transition-colors shadow-xs"
                       >
                         <span>{act.label}</span>
-                        <span className="material-symbols-outlined text-[18px]">
+                        <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
                           call
                         </span>
                       </a>
@@ -93,7 +93,7 @@ export function ChatBubble({ message }: { message: ChatMessage }) {
                       className="flex items-center justify-between px-4 py-2.5 rounded-full bg-surface text-on-surface font-label text-label-md border border-outline-variant/40 hover:bg-surface-container transition-colors"
                     >
                       <span>{act.label}</span>
-                      <span className="material-symbols-outlined text-[18px]">
+                      <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
                         arrow_forward
                       </span>
                     </Link>

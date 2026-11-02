@@ -39,7 +39,7 @@ export default function ChartePage() {
       {/* Header Arch */}
       <div className="relative overflow-hidden rounded-t-[2.5rem] rounded-b-2xl bg-primary-fixed/30 p-space-md sm:p-space-lg md:p-space-xl border border-primary/20 flex flex-col gap-3 shadow-xs">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-primary font-label text-label-sm w-fit font-semibold">
-          <span className="material-symbols-outlined text-[16px]">shield</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[16px]">shield</span>
           <span>Pacte de Confiance Fondateur</span>
         </div>
         <h1 className="font-display text-display text-on-surface font-bold">
@@ -59,7 +59,7 @@ export default function ChartePage() {
             className="rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 flex flex-col gap-3 shadow-xs"
           >
             <div className="w-10 h-10 rounded-2xl bg-primary-fixed/50 text-primary flex items-center justify-center shadow-xs">
-              <span className="material-symbols-outlined text-[22px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
                 {c.icon}
               </span>
             </div>
@@ -91,7 +91,7 @@ export default function ChartePage() {
             className="inline-flex items-center gap-1.5 text-primary font-label text-label-md font-semibold hover:underline"
           >
             <span>Retourner à l&apos;accueil</span>
-            <span className="material-symbols-outlined text-[16px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
               arrow_forward
             </span>
           </Link>

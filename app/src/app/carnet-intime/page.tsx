@@ -124,24 +124,11 @@ export default function CarnetIntimePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-space-sm">
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full bg-secondary-container/40 text-on-secondary-container font-label text-label-sm font-semibold">
-              Espace Privé &amp; Chiffré
-            </span>
-            <span className="text-outline-variant font-label text-label-sm">•</span>
-            <span className="text-on-surface-variant font-label text-label-sm flex items-center gap-1">
-              <span className="material-symbols-outlined text-[13px] text-primary">
-                verified_user
-              </span>
-              Protégé au repos (AES-256-GCM)
-            </span>
-          </div>
-          <h1 className="font-display text-display text-on-surface tracking-tight flex items-center gap-2 font-bold">
-            Mon Carnet Intime <span className="text-tertiary-container">🌸</span>
+          <h1 className="font-display text-display text-on-surface tracking-tight font-bold">
+            Mon carnet
           </h1>
           <p className="font-body text-body-md text-on-surface-variant max-w-xl mt-0.5">
-            Observe ton corps avec douceur, sans tabou ni jugement. Chaque cycle
-            raconte ton équilibre naturel.
+            Ton cycle, rien que pour toi.
           </p>
         </div>
 
@@ -155,7 +142,7 @@ export default function CarnetIntimePage() {
                 : "bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant"
             }`}
           >
-            <span className="material-symbols-outlined text-[16px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
               {isDiscreetMode ? "visibility_off" : "visibility"}
             </span>
             <span>{isDiscreetMode ? "Mode Discret Actif" : "Mode Discret"}</span>
@@ -164,7 +151,7 @@ export default function CarnetIntimePage() {
             href="#log-section"
             className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary font-label text-label-md font-semibold hover:bg-primary-container transition-all shadow-xs"
           >
-            <span className="material-symbols-outlined text-[18px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
               edit_note
             </span>
             <span>Ressentis du jour</span>
@@ -192,7 +179,7 @@ export default function CarnetIntimePage() {
             value={periodStartInput}
             max={new Date().toISOString().slice(0, 10)}
             onChange={(e) => setPeriodStartInput(e.target.value)}
-            className="w-full sm:max-w-xs px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+            className="w-full sm:max-w-xs px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface"
           />
           {periodError && (
             <p className="font-body text-body-sm text-error">{periodError}</p>
@@ -210,14 +197,13 @@ export default function CarnetIntimePage() {
       {!prediction ? (
         <div className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-space-md sm:p-space-lg md:p-space-xl border border-outline-variant/30 flex flex-col items-center text-center gap-3">
           <span className="w-14 h-14 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center">
-            <span className="material-symbols-outlined text-[28px]">calendar_month</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-[28px]">calendar_month</span>
           </span>
           <h2 className="font-headline text-headline-md text-on-surface font-bold">
             Ton cycle s&apos;affichera ici
           </h2>
           <p className="font-body text-body-md text-on-surface-variant max-w-md">
-            Indique la date de début de tes dernières règles juste au-dessus.
-            Koko ne fait aucune estimation sans tes propres données.
+            Indique la date de tes dernières règles.
           </p>
         </div>
       ) : (
@@ -266,7 +252,7 @@ export default function CarnetIntimePage() {
             <div className="bg-surface/80 backdrop-blur-md rounded-2xl p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm shadow-xs border border-outline-variant/20">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary shrink-0">
-                  <span className="material-symbols-outlined text-[20px]">
+                  <span aria-hidden="true" className="material-symbols-outlined text-[20px]">
                     calendar_month
                   </span>
                 </div>
@@ -282,7 +268,7 @@ export default function CarnetIntimePage() {
                     Dans environ {prediction.daysUntilNextPeriod} jours
                   </span>
                   <span className="font-body text-body-sm text-tertiary font-semibold">
-                    Estimation : elle s&apos;affine à chaque cycle enregistré
+                    Estimation
                   </span>
                 </div>
               </div>
@@ -302,7 +288,7 @@ export default function CarnetIntimePage() {
             <div className="bg-surface/80 backdrop-blur-md rounded-2xl p-space-md flex flex-col gap-2 shadow-xs border border-outline-variant/20">
               <div className="flex items-center justify-between">
                 <span className="font-label text-label-md text-on-surface-variant font-semibold">
-                  Conseil bien-être pour ton jour de cycle :
+                  Conseil du jour
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label text-label-sm font-semibold">
                   Jour {prediction.currentDay}
@@ -327,8 +313,7 @@ export default function CarnetIntimePage() {
         />
       </div>
       <p className="font-body text-body-sm text-on-surface-variant -mt-3">
-        Ces dates sont des estimations et ne remplacent pas une contraception :
-        ne t&apos;y fie pas pour éviter une grossesse.
+        Estimation seulement : ce n&apos;est pas une contraception.
       </p>
       </>
       )}
@@ -340,7 +325,7 @@ export default function CarnetIntimePage() {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-[24px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-primary text-[24px]">
               edit_note
             </span>
             <h2 className="font-headline text-headline-sm text-on-surface font-bold">
@@ -422,8 +407,8 @@ export default function CarnetIntimePage() {
               className="font-label text-label-md text-on-surface font-semibold flex items-center justify-between"
             >
               <span>Note intime personnelle (100% chiffrée) :</span>
-              <span className="text-[11px] text-primary flex items-center gap-1 font-normal">
-                <span className="material-symbols-outlined text-[13px]">lock</span>
+              <span className="text-label-sm text-primary flex items-center gap-1 font-normal">
+                <span aria-hidden="true" className="material-symbols-outlined text-[13px]">lock</span>
                 Chiffrée avec ta clé secrète
               </span>
             </label>
@@ -433,7 +418,7 @@ export default function CarnetIntimePage() {
               onChange={(e) => setSecretNote(e.target.value)}
               placeholder="Écris ici ce que tu ressens en toute confiance... Tes doutes, tes émotions ou tes questions pour ton prochain rendez-vous."
               rows={4}
-              className={`w-full p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface placeholder:text-on-surface-variant/60 ${
+              className={`w-full p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface placeholder:text-on-surface-variant/60 ${
                 isDiscreetMode ? "discreet-blur" : ""
               }`}
             />
@@ -441,13 +426,13 @@ export default function CarnetIntimePage() {
 
           {saveSuccess && (
             <div className="p-3 rounded-xl bg-primary-fixed/40 text-on-primary-fixed-variant font-label text-label-md flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">check_circle</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">check_circle</span>
               <span>Ton ressenti a été chiffré et sauvegardé avec amour dans ton carnet.</span>
             </div>
           )}
           {saveError && (
             <div className="p-3 rounded-xl bg-error-container text-on-error-container font-label text-label-md flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">error</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">error</span>
               <span>{saveError}</span>
             </div>
           )}
@@ -466,7 +451,7 @@ export default function CarnetIntimePage() {
       {/* Privacy Toggles & WhatsApp Reminders */}
       <div className="rounded-2xl bg-surface-container-low p-space-md sm:p-space-lg shadow-xs border border-outline-variant/30 flex flex-col gap-4">
         <h3 className="font-headline text-headline-sm text-on-surface font-bold flex items-center gap-2">
-          <span className="material-symbols-outlined text-secondary text-[22px]">
+          <span aria-hidden="true" className="material-symbols-outlined text-secondary text-[22px]">
             tune
           </span>
           <span>Préférences de discrétion &amp; Rappels</span>
@@ -480,9 +465,7 @@ export default function CarnetIntimePage() {
                 Rappels WhatsApp camouflés
               </span>
               <p className="font-body text-body-sm text-on-surface-variant mt-1">
-                Recevoir des messages anodins comme{" "}
-                <em className="text-primary font-medium">« Pense à arroser ta plante »</em>{" "}
-                sans mentionner le mot règles ni santé.
+                Des rappels discrets, sans mot sensible.
               </p>
             </div>
             <span className="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label-sm font-semibold shrink-0">
@@ -497,8 +480,7 @@ export default function CarnetIntimePage() {
                 Voile anti-regards automatique
               </span>
               <p className="font-body text-body-sm text-on-surface-variant mt-1">
-                Floute l&apos;écran si aucune interaction n&apos;a lieu pendant 2 minutes
-                (idéal en salle d&apos;étude ou en présence d&apos;amis).
+                L&apos;écran se floute après 2 minutes sans activité.
               </p>
             </div>
             <span className="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label text-label-sm font-semibold shrink-0">

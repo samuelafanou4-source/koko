@@ -87,7 +87,7 @@ export function DoorMotif() {
       </div>
 
       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-surface-container-lowest text-primary px-3 py-1 rounded-full shadow-sm font-label text-label-sm flex items-center gap-1 whitespace-nowrap border border-outline-variant/30">
-        <span className="material-symbols-outlined text-[14px]">touch_app</span>
+        <span aria-hidden="true" className="material-symbols-outlined text-[14px]">touch_app</span>
         <span>{isKnocked ? "Ko-ko ! Entre doucement..." : "Touche la porte"}</span>
       </div>
     </div>

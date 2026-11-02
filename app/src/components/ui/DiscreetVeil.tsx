@@ -59,7 +59,7 @@ export function DiscreetVeil() {
     >
       <div className="max-w-md bg-surface p-8 rounded-3xl shadow-xl border border-outline-variant/40 flex flex-col items-center gap-4">
         <div className="w-16 h-16 rounded-full bg-primary-fixed/40 text-primary flex items-center justify-center">
-          <span className="material-symbols-outlined text-[32px]">shield</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[32px]">shield</span>
         </div>
         <div className="flex flex-col gap-1">
           <h2 className="font-headline text-headline-sm text-on-surface">

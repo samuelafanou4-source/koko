@@ -30,14 +30,14 @@ export function BottomNav() {
                 : "text-on-surface-variant hover:text-on-surface"
             }`}
           >
-            <span
+            <span aria-hidden="true"
               className={`material-symbols-outlined text-[22px] ${
                 isActive ? "text-primary" : "text-on-surface-variant"
               }`}
             >
               {tab.icon}
             </span>
-            <span className="font-label text-[11px] leading-tight mt-0.5">
+            <span className="font-label text-label-sm leading-tight mt-0.5">
               {tab.label}
             </span>
           </Link>

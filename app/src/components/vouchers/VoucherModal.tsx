@@ -38,7 +38,7 @@ export function VoucherModal({ isOpen, onClose, voucher }: VoucherModalProps) {
 
         {/* Reassurance pill */}
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed-variant font-label text-label-sm mb-4">
-          <span className="material-symbols-outlined text-[14px]">visibility_off</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[14px]">visibility_off</span>
           <span>Bon 100% Anonyme</span>
         </div>
 
@@ -71,16 +71,16 @@ export function VoucherModal({ isOpen, onClose, voucher }: VoucherModalProps) {
             {voucher.centerName}
           </div>
           <div className="text-on-surface-variant flex items-center gap-1">
-            <span className="material-symbols-outlined text-[14px]">location_on</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-[14px]">location_on</span>
             <span>
               {voucher.centerAddress}, {voucher.city}
             </span>
           </div>
           <div className="text-primary font-semibold flex items-center gap-1 mt-0.5">
-            <span className="material-symbols-outlined text-[14px]">savings</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-[14px]">savings</span>
             <span>{voucher.priceInfo}</span>
           </div>
-          <div className="text-on-surface-variant/80 text-[11px] mt-1 pt-1 border-t border-outline-variant/20">
+          <div className="text-on-surface-variant/80 text-label-sm mt-1 pt-1 border-t border-outline-variant/20">
             Valable jusqu&apos;au {new Date(voucher.expiresAt).toLocaleDateString("fr-FR")}
           </div>
         </div>

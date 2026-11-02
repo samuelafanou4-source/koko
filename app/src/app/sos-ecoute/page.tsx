@@ -52,20 +52,15 @@ export default function SosEcoutePage() {
       {/* Warm Compassionate Header */}
       <div className="relative overflow-hidden rounded-t-[2.5rem] rounded-b-2xl bg-tertiary-fixed/35 p-space-md sm:p-space-lg md:p-space-xl border border-tertiary/20 flex flex-col items-center text-center gap-4 shadow-xs">
         <div className="w-14 h-14 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-xs">
-          <span className="material-symbols-outlined text-[28px]">support</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[28px]">support</span>
         </div>
 
         <div className="flex flex-col gap-1.5 max-w-xl">
-          <span className="font-label text-label-sm uppercase tracking-wider text-tertiary font-bold">
-            Sanctuaire de Secours &amp; Soutien
-          </span>
           <h1 className="font-display text-display text-on-surface font-bold">
             Tu n&apos;es pas seule.
           </h1>
           <p className="font-body text-body-lg text-on-surface-variant leading-relaxed">
-            Quelle que soit l&apos;épreuve ou l&apos;angoisse que tu traverses, il y a
-            des personnes bienveillantes prêtes à t&apos;écouter au Togo sans aucun
-            jugement et dans le secret le plus absolu.
+            Des personnes sont là pour t&apos;écouter, gratuitement et en secret.
           </p>
         </div>
       </div>
@@ -73,15 +68,11 @@ export default function SosEcoutePage() {
       {/* Interactive Guided Breathing Support */}
       <div className="rounded-2xl bg-surface-container-lowest p-6 md:p-8 shadow-xs border border-outline-variant/30 flex flex-col items-center text-center gap-6">
         <div className="flex flex-col items-center gap-1">
-          <span className="font-label text-label-xs uppercase tracking-wider text-primary font-bold">
-            Apaisement immédiat
-          </span>
           <h2 className="font-headline text-headline-sm text-on-surface font-bold">
             Respire avec Koko
           </h2>
           <p className="font-body text-body-sm text-on-surface-variant max-w-md">
-            Pose tes mains sur tes genoux ou ton ventre. Suis le cercle pour
-            apaiser ton rythme cardiaque.
+            Suis le cercle et respire avec lui.
           </p>
         </div>
 
@@ -106,9 +97,6 @@ export default function SosEcoutePage() {
 
       {/* Emergency Phone Lines in Togo */}
       <div className="flex flex-col gap-1">
-        <span className="font-label text-label-sm text-tertiary uppercase tracking-wider font-semibold">
-          Lignes d&apos;écoute &amp; Urgences médicales
-        </span>
         <h2 className="font-headline text-headline-lg text-on-surface font-bold">
           Qui peux-tu contacter immédiatement ?
         </h2>
@@ -119,7 +107,7 @@ export default function SosEcoutePage() {
         <div className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col justify-between gap-4 shadow-xs">
           <div className="flex flex-col gap-2">
             <div className="w-10 h-10 rounded-2xl bg-tertiary text-on-tertiary flex items-center justify-center shadow-xs">
-              <span className="material-symbols-outlined text-[22px]">call</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[22px]">call</span>
             </div>
             <h3 className="font-headline text-headline-sm text-on-surface font-bold">
               {EMERGENCY_CONTACTS.nationalEmergencyNumber}
@@ -128,8 +116,7 @@ export default function SosEcoutePage() {
               {EMERGENCY_CONTACTS.nationalEmergencyNote}
             </span>
             <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
-              Ligne nationale d&apos;assistance d&apos;urgence au Togo. Pour les
-              situations de détresse, violences ou besoin d&apos;intervention rapide.
+              Détresse, violences, urgence.
             </p>
           </div>
 
@@ -145,7 +132,7 @@ export default function SosEcoutePage() {
         <div className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col justify-between gap-4 shadow-xs">
           <div className="flex flex-col gap-2">
             <div className="w-10 h-10 rounded-2xl bg-primary text-on-primary flex items-center justify-center shadow-xs">
-              <span className="material-symbols-outlined text-[22px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
                 volunteer_activism
               </span>
             </div>
@@ -156,8 +143,7 @@ export default function SosEcoutePage() {
               {EMERGENCY_CONTACTS.ligneVerteNote}
             </span>
             <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
-              Ligne Verte confidentielle dédiée à la santé sexuelle, la
-              contraception d&apos;urgence et le soutien psychologique.
+              Santé sexuelle, contraception d&apos;urgence, écoute.
             </p>
           </div>
 
@@ -173,7 +159,7 @@ export default function SosEcoutePage() {
         <div className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col justify-between gap-4 shadow-xs">
           <div className="flex flex-col gap-2">
             <div className="w-10 h-10 rounded-2xl bg-secondary text-on-secondary flex items-center justify-center shadow-xs">
-              <span className="material-symbols-outlined text-[22px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
                 local_hospital
               </span>
             </div>
@@ -184,8 +170,7 @@ export default function SosEcoutePage() {
               Urgences médicales &amp; Soins
             </span>
             <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
-              CHU Sylvanus Olympio, service d&apos;urgence générale et gynécologique.
-              Accès 24h/24 en cas de douleur aiguë ou hémorragie.
+              Urgences 24h/24 : douleur forte, saignement.
             </p>
           </div>
 
@@ -201,7 +186,7 @@ export default function SosEcoutePage() {
       {/* Redirect to Pass Santé */}
       <div className="rounded-2xl bg-surface-container p-6 border border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="material-symbols-outlined text-primary text-[28px]">
+          <span aria-hidden="true" className="material-symbols-outlined text-primary text-[28px]">
             location_on
           </span>
           <div className="flex flex-col">
@@ -209,8 +194,7 @@ export default function SosEcoutePage() {
               Tu préfères consulter en personne ?
             </div>
             <p className="font-body text-body-sm text-on-surface-variant">
-              Le Pass Santé te donnera un bon anonyme pour les centres qui ont
-              signé une convention avec Koko.
+              Bientôt : un bon anonyme pour consulter.
             </p>
           </div>
         </div>

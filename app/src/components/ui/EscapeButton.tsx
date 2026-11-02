@@ -33,14 +33,12 @@ export function EscapeButton() {
     <button
       onClick={triggerEscape}
       type="button"
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label text-label-sm border border-outline-variant/30"
-      title="Sortie d'urgence : masque l'écran et redirige vers un site neutre (Raccourci : Échap deux fois)"
+      aria-label="Sortie rapide : quitter Koko vers un site neutre"
+      className="flex items-center gap-1.5 h-10 min-w-10 justify-center px-3 rounded-full bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all font-label text-label-md border border-outline-variant/30"
+      title="Sortie rapide (Échap deux fois)"
     >
-      <span className="material-symbols-outlined text-[16px]">visibility_off</span>
+      <span aria-hidden="true" className="material-symbols-outlined text-[18px]">visibility_off</span>
       <span className="hidden sm:inline">Sortie rapide</span>
-      <kbd className="hidden md:inline-block px-1 py-0.5 text-[9px] bg-surface rounded text-on-surface-variant font-mono">
-        Échap ×2
-      </kbd>
     </button>
   );
 }

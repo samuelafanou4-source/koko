@@ -207,7 +207,7 @@ export default function LeCerclePage() {
       <div className="relative overflow-hidden rounded-t-[2.5rem] rounded-b-2xl bg-tertiary-fixed/30 p-space-md sm:p-space-lg md:p-space-xl border border-tertiary/20 flex flex-col md:flex-row md:items-center justify-between gap-space-md shadow-xs">
         <div className="flex flex-col gap-2 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest text-tertiary font-label text-label-sm w-fit font-semibold shadow-xs">
-            <span className="material-symbols-outlined text-[16px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
               diversity_1
             </span>
             <span>Espace Sœurité &amp; Entraide</span>
@@ -216,15 +216,14 @@ export default function LeCerclePage() {
             Le Cercle Bienveillant
           </h1>
           <p className="font-body text-body-md text-on-surface-variant">
-            Ici, les jeunes femmes et étudiantes échangent sans tabou. Pose tes
-            questions les plus intimes et trouve le réconfort d&apos;une sœur.
+            Échange sous pseudo, sans tabou.
           </p>
         </div>
 
         {/* Moderation Pill Badge */}
         <div className="flex flex-col gap-3 items-start md:items-end">
           <div className="flex items-center gap-2 bg-surface-container-lowest px-4 py-2.5 rounded-full shadow-xs border border-outline-variant/30">
-            <span className="material-symbols-outlined text-primary text-[20px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-primary text-[20px]">
               verified
             </span>
             <div className="flex flex-col text-left">
@@ -242,7 +241,7 @@ export default function LeCerclePage() {
             type="button"
             className="flex items-center gap-2 px-6 py-3 rounded-full bg-tertiary text-on-tertiary font-label text-label-md font-semibold hover:bg-tertiary-container transition-all shadow-xs"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-[18px]">add</span>
             <span>Nouveau partage</span>
           </button>
         </div>
@@ -263,7 +262,7 @@ export default function LeCerclePage() {
                   : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container border-outline-variant/30"
               }`}
             >
-              <span className="material-symbols-outlined text-[16px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
                 {c.icon}
               </span>
               <span>{c.label}</span>
@@ -281,8 +280,7 @@ export default function LeCerclePage() {
         ) : posts.length === 0 ? (
           <div className="py-12 text-center rounded-2xl bg-surface-container-low border border-outline-variant/30 px-6">
             <p className="font-body text-body-md text-on-surface-variant">
-              Aucune discussion validée pour le moment. Les messages restent privés
-              jusqu&apos;à leur relecture par l&apos;équipe de modération.
+              Aucune discussion pour le moment.
             </p>
           </div>
         ) : (
@@ -300,7 +298,7 @@ export default function LeCerclePage() {
                     <span className="font-label text-label-sm font-semibold text-on-surface">
                       {post.authorPseudonym}
                     </span>
-                    <span className="font-body text-[11px] text-on-surface-variant">
+                    <span className="font-body text-label-sm text-on-surface-variant">
                       {new Date(post.createdAt).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "long",
@@ -359,7 +357,7 @@ export default function LeCerclePage() {
                     type="button"
                     className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant font-label text-label-sm transition-colors"
                   >
-                    <span className="material-symbols-outlined text-[16px]">
+                    <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
                       chat_bubble_outline
                     </span>
                     <span>{post.commentsCount} réponses</span>
@@ -373,7 +371,7 @@ export default function LeCerclePage() {
                   className="text-on-surface-variant hover:text-error transition-colors p-1"
                   title="Signaler ce message"
                 >
-                  <span className="material-symbols-outlined text-[16px]">
+                  <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
                     flag
                   </span>
                 </button>
@@ -400,7 +398,7 @@ export default function LeCerclePage() {
             </button>
 
             <div className="flex items-center gap-2 text-tertiary font-headline text-headline-sm font-bold">
-              <span className="material-symbols-outlined text-[24px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[24px]">
                 diversity_1
               </span>
               <span>Déposer un mot dans Le Cercle</span>
@@ -433,7 +431,7 @@ export default function LeCerclePage() {
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  className="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 font-label text-label-sm focus:outline-none focus:border-primary text-on-surface"
+                  className="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40 font-label text-label-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-on-surface"
                 >
                   <option value="contraception">Contraception &amp; Urgence</option>
                   <option value="cycle">Règles &amp; Cycle</option>
@@ -452,7 +450,7 @@ export default function LeCerclePage() {
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="Ex : Inquiète après mon premier oubli de pilule..."
                   required
-                  className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/40 font-body text-body-md focus:outline-none focus:border-primary text-on-surface"
+                  className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/40 font-body text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-on-surface"
                 />
               </div>
 
@@ -466,7 +464,7 @@ export default function LeCerclePage() {
                   placeholder="Raconte ce que tu traverses sans crainte. Ici personne ne te jugera..."
                   rows={5}
                   required
-                  className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/40 font-body text-body-md focus:outline-none focus:border-primary text-on-surface"
+                  className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/40 font-body text-body-md focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 text-on-surface"
                 />
               </div>
 
@@ -524,7 +522,7 @@ export default function LeCerclePage() {
                 </div>
               ) : comments.length === 0 ? (
                 <div className="text-center py-6 text-on-surface-variant font-body text-sm">
-                  Soyez la première sœur à lui répondre avec douceur 🌸
+                  Sois la première à répondre 🌸
                 </div>
               ) : (
                 comments.map((c) => (
@@ -536,7 +534,7 @@ export default function LeCerclePage() {
                       <span className="font-label font-semibold text-primary">
                         🌸 {c.authorPseudonym}
                       </span>
-                      <span className="text-on-surface-variant text-[11px]">
+                      <span className="text-on-surface-variant text-label-sm">
                         {new Date(c.createdAt).toLocaleDateString("fr-FR")}
                       </span>
                     </div>

@@ -87,18 +87,17 @@ export default function OnboardingPage() {
         </div>
         <div className="flex flex-col gap-1">
           <h1 className="font-display text-display text-on-surface font-bold">
-            Choisis ton cocon
+            Crée ton espace
           </h1>
           <p className="font-body text-body-md text-on-surface-variant max-w-sm">
-            Aucun nom de famille ni document. Un pseudonyme poétique suffit pour
-            accéder à ton sanctuaire.
+            Juste un pseudo. Pas de nom, pas de numéro.
           </p>
         </div>
       </div>
 
       <div className="bg-surface-container-lowest rounded-t-[2.5rem] rounded-b-2xl p-6 md:p-8 shadow-xs border border-outline-variant/30 flex flex-col gap-5">
         {error && (
-          <div className="p-3.5 rounded-xl bg-error-container text-on-error-container font-label text-label-sm">
+          <div role="alert" className="p-3.5 rounded-xl bg-error-container text-on-error-container font-label text-label-md">
             {error}
           </div>
         )}
@@ -107,16 +106,16 @@ export default function OnboardingPage() {
           {/* Pseudonym Suggestions Chips */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <label className="font-label text-label-sm text-on-surface font-semibold">
-                Suggestions poétiques &amp; botaniques :
-              </label>
+              <p className="font-label text-label-md text-on-surface font-semibold">
+                Idées de pseudo
+              </p>
               <button
                 type="button"
                 onClick={fetchSuggestions}
                 disabled={loadingSuggestions}
-                className="font-label text-[11px] text-primary hover:underline flex items-center gap-1"
+                className="font-label text-label-sm text-primary hover:underline flex items-center gap-1"
               >
-                <span className="material-symbols-outlined text-[14px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-[14px]">
                   refresh
                 </span>
                 <span>Autres idées</span>
@@ -135,7 +134,7 @@ export default function OnboardingPage() {
                       : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container border-outline-variant/30"
                   }`}
                 >
-                  🌸 {s}
+                  {s}
                 </button>
               ))}
             </div>
@@ -147,7 +146,7 @@ export default function OnboardingPage() {
               htmlFor="pseudonym"
               className="font-label text-label-sm text-on-surface font-semibold"
             >
-              Ton pseudonyme personnalisé :
+              Ton pseudo
             </label>
             <input
               id="pseudonym"
@@ -158,7 +157,8 @@ export default function OnboardingPage() {
               required
               minLength={3}
               maxLength={30}
-              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+              autoComplete="username"
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface"
             />
           </div>
 
@@ -168,9 +168,9 @@ export default function OnboardingPage() {
               htmlFor="password"
               className="font-label text-label-sm text-on-surface font-semibold flex items-center justify-between"
             >
-              <span>Mot de passe secret :</span>
-              <span className="text-[11px] text-on-surface-variant font-normal">
-                Min. 6 caractères
+              <span>Mot de passe</span>
+              <span className="text-label-sm text-on-surface-variant font-normal">
+                6 caractères minimum
               </span>
             </label>
             <input
@@ -181,11 +181,11 @@ export default function OnboardingPage() {
               placeholder="••••••••"
               required
               minLength={6}
-              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+              autoComplete="new-password"
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface"
             />
-            <p className="font-body text-[11px] text-on-surface-variant leading-tight mt-1">
-              🔒 Retiens bien ce mot de passe. Pour protéger ton anonymat, nous ne
-              demandons aucun e-mail ni numéro pour le réinitialiser.
+            <p className="font-body text-body-sm text-on-surface-variant mt-1">
+              Retiens-le bien : sans e-mail ni numéro, on ne peut pas le récupérer.
             </p>
           </div>
 
@@ -195,18 +195,18 @@ export default function OnboardingPage() {
             disabled={submitting || !pseudonym.trim() || !password}
             className="mt-2 w-full py-3.5 rounded-full bg-primary text-on-primary font-label text-label-md font-semibold hover:bg-primary-container transition-all shadow-xs disabled:opacity-50"
           >
-            {submitting ? "Création de ton refuge..." : "Entrer dans mon sanctuaire"}
+            {submitting ? "Création…" : "Créer mon espace"}
           </button>
         </form>
 
         <div className="text-center pt-2 border-t border-outline-variant/20">
           <p className="font-body text-body-sm text-on-surface-variant">
-            Tu as déjà un espace secret ?{" "}
+            Déjà un compte ?{" "}
             <Link
               href="/connexion"
               className="text-primary font-semibold hover:underline"
             >
-              Te connecter
+              Me connecter
             </Link>
           </p>
         </div>

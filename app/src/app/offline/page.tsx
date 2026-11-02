@@ -21,7 +21,7 @@ export default function OfflinePage() {
       {/* Offline Emergency Card */}
       <div className="w-full rounded-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col gap-3 text-left">
         <div className="font-headline text-headline-sm text-tertiary font-bold flex items-center gap-2">
-          <span className="material-symbols-outlined text-[20px]">support</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[20px]">support</span>
           <span>Numéros d&apos;appel directs :</span>
         </div>
         <div className="flex flex-col gap-2">

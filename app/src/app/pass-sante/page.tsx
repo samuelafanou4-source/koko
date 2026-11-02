@@ -103,7 +103,7 @@ export default function PassSantePage() {
       <div className="relative overflow-hidden rounded-t-[2.5rem] rounded-b-2xl bg-primary-fixed/25 p-space-md sm:p-space-lg md:p-space-xl border border-primary/20 flex flex-col md:flex-row md:items-center justify-between gap-space-md shadow-xs">
         <div className="flex flex-col gap-2 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest text-primary font-label text-label-sm w-fit font-semibold shadow-xs">
-            <span className="material-symbols-outlined text-[16px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
               local_hospital
             </span>
             <span>Réseau &quot;Girl-Friendly&quot;</span>
@@ -112,15 +112,13 @@ export default function PassSantePage() {
             Pass Santé
           </h1>
           <p className="font-body text-body-md text-on-surface-variant">
-            Un bon de consultation anonyme, valable uniquement dans les centres
-            qui ont signé une convention avec Koko. Chaque centre affiché ici a
-            été vérifié par l&apos;équipe.
+            Un bon anonyme pour consulter dans un centre vérifié.
           </p>
         </div>
 
         <div className="flex flex-col gap-2.5 items-start md:items-end">
           <div className="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-full shadow-xs border border-outline-variant/30 text-xs font-label">
-            <span className="material-symbols-outlined text-primary text-[18px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-primary text-[18px]">
               qr_code_scanner
             </span>
             <span>Code QR Anonyme • Zéro question indiscrète</span>
@@ -132,7 +130,7 @@ export default function PassSantePage() {
             type="button"
             className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-on-primary font-label text-label-md font-semibold hover:bg-primary-container transition-all shadow-xs disabled:opacity-50"
           >
-            <span className="material-symbols-outlined text-[18px]">
+            <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
               my_location
             </span>
             <span>{loading ? "Recherche en cours..." : "Trouver le plus proche"}</span>
@@ -143,33 +141,30 @@ export default function PassSantePage() {
       {hasLoaded && centers.length === 0 && cityFilter === "all" ? (
         <div className="rounded-3xl bg-surface-container-low border border-outline-variant/50 p-6 md:p-8 flex flex-col gap-4">
           <div className="w-12 h-12 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
-            <span className="material-symbols-outlined text-[24px]">handshake</span>
+            <span aria-hidden="true" className="material-symbols-outlined text-[24px]">handshake</span>
           </div>
           <h2 className="font-headline text-headline-md text-on-surface font-bold">
             Le réseau de centres partenaires arrive bientôt
           </h2>
           <p className="font-body text-body-md text-on-surface-variant max-w-2xl">
-            Nous finalisons les conventions avec des centres de santé
-            accueillants. Tant qu&apos;un centre n&apos;a pas signé, nous préférons
-            ne rien afficher plutôt que de t&apos;envoyer vers une adresse ou un
-            tarif non vérifiés.
+            Aucun centre n&apos;est encore vérifié.
           </p>
           <p className="font-body text-body-md text-on-surface font-semibold">
-            En attendant, tu peux être écoutée et orientée gratuitement :
+            En attendant, tu peux être écoutée :
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <a
               href={`tel:${EMERGENCY_CONTACTS.ligneVerteEcoute}`}
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-primary text-on-primary font-label text-label-md hover:bg-primary-container transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">call</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">call</span>
               Ligne Verte {EMERGENCY_CONTACTS.ligneVerteEcoute}
             </a>
             <Link
               href="/assistant-koko"
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant font-label text-label-md hover:border-primary/50 transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[18px]">chat_bubble</span>
               Poser ma question à Koko
             </Link>
           </div>
@@ -224,7 +219,7 @@ export default function PassSantePage() {
                 </span>
                 {center.distanceKm !== undefined && (
                   <span className="font-label text-label-sm text-primary font-semibold flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px]">
+                    <span aria-hidden="true" className="material-symbols-outlined text-[14px]">
                       near_me
                     </span>
                     À {center.distanceKm} km
@@ -242,13 +237,13 @@ export default function PassSantePage() {
 
               <div className="flex flex-col gap-1 pt-1 text-xs">
                 <div className="flex items-center gap-1.5 text-on-surface-variant">
-                  <span className="material-symbols-outlined text-[16px] text-primary">
+                  <span aria-hidden="true" className="material-symbols-outlined text-[16px] text-primary">
                     location_on
                   </span>
                   <span>{center.address}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-on-surface-variant">
-                  <span className="material-symbols-outlined text-[16px] text-secondary">
+                  <span aria-hidden="true" className="material-symbols-outlined text-[16px] text-secondary">
                     call
                   </span>
                   <span>{center.phone}</span>
@@ -257,7 +252,7 @@ export default function PassSantePage() {
 
               {/* Price badge */}
               <div className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/20 flex items-center gap-2 mt-2">
-                <span className="material-symbols-outlined text-primary text-[20px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-[20px]">
                   savings
                 </span>
                 <span className="font-label text-label-sm text-primary font-bold">
@@ -271,7 +266,7 @@ export default function PassSantePage() {
                 href={`tel:${center.phone}`}
                 className="px-4 py-2 rounded-full font-label text-label-sm text-on-surface-variant hover:bg-surface-container-high transition-colors flex items-center gap-1"
               >
-                <span className="material-symbols-outlined text-[16px]">call</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-[16px]">call</span>
                 <span>Appeler</span>
               </a>
 
@@ -281,7 +276,7 @@ export default function PassSantePage() {
                 disabled={generatingVoucher === center.id}
                 className="px-5 py-2.5 rounded-full bg-primary text-on-primary font-label text-label-sm font-semibold hover:bg-primary-container transition-all shadow-xs flex items-center gap-1.5 disabled:opacity-50"
               >
-                <span className="material-symbols-outlined text-[16px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-[16px]">
                   qr_code
                 </span>
                 <span>

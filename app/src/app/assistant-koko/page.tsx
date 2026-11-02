@@ -159,25 +159,17 @@ export default function AssistantKokoPage() {
     <div className="w-full max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-space-md md:py-space-lg flex flex-col gap-space-lg">
       {/* Ethical & Safety Disclaimer Banner */}
       <div className="w-full bg-secondary-container/40 text-on-secondary-container rounded-2xl p-space-md flex items-start sm:items-center gap-3 shadow-xs border border-secondary/20">
-        <span
+        <span aria-hidden="true"
           className="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5 sm:mt-0"
           style={{ fontVariationSettings: "'FILL' 1" }}
         >
           info
         </span>
         <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <p className="font-body text-body-sm leading-relaxed text-on-surface-variant">
-            <strong className="font-semibold text-secondary">
-              Espace d&apos;écoute bienveillante :
-            </strong>{" "}
-            Koko est une guide d&apos;information et de soutien confidentiel, pas un
-            médecin. En cas de douleur aiguë ou d&apos;urgence, consulte sans attendre
-            un professionnel de santé.
+          <p className="font-body text-body-md text-on-surface-variant">
+            Koko n&apos;est pas un médecin. En cas d&apos;urgence, consulte un
+            professionnel de santé.
           </p>
-          <span className="inline-flex items-center gap-1 text-[11px] font-label text-secondary bg-surface-container-lowest/80 px-2.5 py-1 rounded-full whitespace-nowrap self-start sm:self-auto font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />{" "}
-            Anonymat garanti
-          </span>
         </div>
       </div>
 
@@ -196,7 +188,7 @@ export default function AssistantKokoPage() {
                   <h1 className="font-headline text-headline-sm text-on-surface font-bold">
                     Koko à ton écoute
                   </h1>
-                  <span
+                  <span aria-hidden="true"
                     className="material-symbols-outlined text-primary text-[18px]"
                     title="Refuge chiffré"
                   >
@@ -217,12 +209,12 @@ export default function AssistantKokoPage() {
                 className="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant flex items-center justify-center transition-colors"
                 title="Effacer la conversation de cette session"
               >
-                <span className="material-symbols-outlined text-[18px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
                   delete_sweep
                 </span>
               </button>
               <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed-variant font-label text-label-sm font-semibold">
-                <span className="material-symbols-outlined text-[14px]">lock</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-[14px]">lock</span>
                 <span>Zéro trace IP</span>
               </div>
             </div>
@@ -231,7 +223,7 @@ export default function AssistantKokoPage() {
           {/* Quick Topic Exploration Chips */}
           <div className="bg-surface-container px-space-md md:px-space-lg py-2.5 overflow-x-auto flex items-center gap-2 border-b border-outline-variant/20">
             <span className="font-label text-label-sm text-on-surface-variant whitespace-nowrap flex items-center gap-1 mr-1">
-              <span className="material-symbols-outlined text-[14px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[14px]">
                 lightbulb
               </span>{" "}
               Sujets :
@@ -253,10 +245,10 @@ export default function AssistantKokoPage() {
           <div className="flex-1 p-space-md md:p-space-lg flex flex-col gap-4 overflow-y-auto max-h-[500px]">
             <div className="flex justify-center my-1">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label-sm text-center">
-                <span className="material-symbols-outlined text-[14px] text-primary">
+                <span aria-hidden="true" className="material-symbols-outlined text-[14px] text-primary">
                   spa
                 </span>
-                Ici, personne ne te juge. Tu es dans ton sanctuaire.
+                Ici, personne ne te juge.
               </span>
             </div>
 
@@ -279,7 +271,7 @@ export default function AssistantKokoPage() {
             >
               <div className="flex-1 relative flex items-center">
                 <span className="absolute left-3.5 text-on-surface-variant/60 pointer-events-none">
-                  <span className="material-symbols-outlined text-[18px]">
+                  <span aria-hidden="true" className="material-symbols-outlined text-[18px]">
                     lock
                   </span>
                 </span>
@@ -288,7 +280,7 @@ export default function AssistantKokoPage() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Pose ta question en toute sécurité..."
-                  className="w-full pl-10 pr-10 py-3.5 rounded-full bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+                  className="w-full pl-10 pr-10 py-3.5 rounded-full bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface"
                   disabled={loading}
                 />
               </div>
@@ -299,12 +291,12 @@ export default function AssistantKokoPage() {
                 className="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center hover:bg-primary-container disabled:opacity-50 disabled:hover:bg-primary transition-all shadow-xs shrink-0"
                 title="Envoyer"
               >
-                <span className="material-symbols-outlined text-[20px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-[20px]">
                   send
                 </span>
               </button>
             </form>
-            <div className="flex items-center justify-between px-2 pt-2 text-[11px] font-label text-on-surface-variant">
+            <div className="flex items-center justify-between px-2 pt-2 text-label-sm font-label text-on-surface-variant">
               <span>🌸 Connectée sous le pseudonyme {pseudonym}</span>
               <span>🔒 Échange chiffré</span>
             </div>
@@ -316,7 +308,7 @@ export default function AssistantKokoPage() {
           {/* Need human help card */}
           <div className="rounded-t-[2.5rem] rounded-b-2xl bg-tertiary-fixed/30 p-6 border border-tertiary/20 flex flex-col gap-3">
             <div className="w-10 h-10 rounded-2xl bg-tertiary text-on-tertiary flex items-center justify-center shadow-xs">
-              <span className="material-symbols-outlined text-[22px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
                 support_agent
               </span>
             </div>
@@ -324,15 +316,13 @@ export default function AssistantKokoPage() {
               Besoin d’une voix humaine ?
             </h3>
             <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
-              Koko est une guide numérique, pas une soignante. Si tu as besoin
-              d’un soutien d’urgence, l’espace SOS te donne les lignes d’écoute
-              gratuites au Togo.
+              Koko n&apos;est pas une soignante. En cas d&apos;urgence, va dans l&apos;espace SOS.
             </p>
             <Link
               href="/sos-ecoute"
               className="mt-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-full bg-tertiary text-on-tertiary font-label text-label-md font-semibold hover:bg-tertiary-container transition-colors shadow-xs"
             >
-              <span className="material-symbols-outlined text-[16px]">call</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[16px]">call</span>
               <span>Accéder à SOS Écoute</span>
             </Link>
           </div>
@@ -340,32 +330,32 @@ export default function AssistantKokoPage() {
           {/* Privacy Shield Checklist */}
           <div className="rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 flex flex-col gap-3">
             <div className="flex items-center gap-2 text-primary font-headline text-headline-sm font-bold">
-              <span className="material-symbols-outlined text-[22px]">
+              <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
                 shield
               </span>
               <span>Bouclier de confidentialité</span>
             </div>
             <ul className="flex flex-col gap-2 font-body text-body-sm text-on-surface-variant">
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-[16px]">
                   check
                 </span>
                 <span> Aucun nom ni numéro de téléphone obligatoire </span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-[16px]">
                   check
                 </span>
                 <span> Notes et conversations chiffrées </span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-[16px]">
                   check
                 </span>
                 <span> Suppression de toutes tes données en un clic </span>
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[16px]">
+                <span aria-hidden="true" className="material-symbols-outlined text-primary text-[16px]">
                   check
                 </span>
                 <span>Aucune publicité, aucun traceur</span>

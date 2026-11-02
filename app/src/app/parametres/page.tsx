@@ -74,28 +74,27 @@ export default function ParametresPage() {
       {/* Header */}
       <div className="flex flex-col gap-1">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container font-label text-label-sm w-fit font-semibold mb-1">
-          <span className="material-symbols-outlined text-[16px]">tune</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[16px]">tune</span>
           <span>Contrôle Total &amp; Souveraineté</span>
         </div>
         <h1 className="font-display text-display text-on-surface font-bold">
           Paramètres &amp; Confidentialité
         </h1>
         <p className="font-body text-body-md text-on-surface-variant">
-          Gère tes préférences de discrétion physique et exerce ton droit absolu à
-          l&apos;effacement.
+          Ta discrétion et tes données.
         </p>
       </div>
 
       {clearToast && (
         <div className="p-3.5 rounded-xl bg-primary-fixed text-on-primary-fixed-variant font-label text-label-md flex items-center gap-2 animate-fadeIn">
-          <span className="material-symbols-outlined text-[18px]">check_circle</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[18px]">check_circle</span>
           <span>Traces de navigation, formulaires et caches locaux effacés.</span>
         </div>
       )}
 
       {deleteSuccess && (
         <div className="p-4 rounded-xl bg-primary text-on-primary font-label text-label-md flex items-center gap-2 animate-fadeIn">
-          <span className="material-symbols-outlined text-[20px]">check_circle</span>
+          <span aria-hidden="true" className="material-symbols-outlined text-[20px]">check_circle</span>
           <span>
             Toutes tes données d&apos;identité et de santé ont été définitivement
             supprimées. Redirection...
@@ -150,8 +149,7 @@ export default function ParametresPage() {
               Mode Discret (Floutage instantané)
             </span>
             <p className="font-body text-body-sm text-on-surface-variant">
-              Floute automatiquement les données de cycle et les messages intimes
-              sur l&apos;écran pour éviter les regards indiscrets.
+              Floute tes infos sensibles à l&apos;écran.
             </p>
           </div>
           <button
@@ -177,8 +175,7 @@ export default function ParametresPage() {
               Effacer les traces locales
             </span>
             <p className="font-body text-body-sm text-on-surface-variant">
-              Nettoie le cache de ce navigateur, l&apos;historique de conversation
-              éphémère et les formulaires temporaires.
+              Efface l&apos;historique de ce navigateur.
             </p>
           </div>
           <button
@@ -228,17 +225,14 @@ export default function ParametresPage() {
       {/* Danger Zone: Delete Data */}
       <div className="rounded-2xl bg-tertiary-fixed/20 p-6 border border-tertiary-container/30 flex flex-col gap-4 shadow-xs">
         <div className="flex items-center gap-2 text-tertiary font-headline text-headline-sm font-bold">
-          <span className="material-symbols-outlined text-[22px]">
+          <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
             delete_forever
           </span>
           <span>Droit à l&apos;oubli absolu</span>
         </div>
 
         <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
-          En application des règles les plus strictes de confidentialité, tu peux
-          demander à tout moment la suppression définitive de ton compte, de ton
-          journal de cycle, de tes messages et de tes pass. Cette opération est
-          immédiate et 100% irréversible.
+          Supprime définitivement ton compte et toutes tes données. C&apos;est irréversible.
         </p>
 
         {showConfirmDelete ? (

@@ -85,7 +85,7 @@ export function CycleRing({
         <span className="font-label text-label-sm text-on-surface-variant mt-0.5">
           sur {totalCycleLength} jours
         </span>
-        <span className="mt-1 px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label text-[10px] truncate max-w-[120px]">
+        <span className="mt-1 px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label-sm truncate max-w-[120px]">
           {phaseLabel}
         </span>
       </div>

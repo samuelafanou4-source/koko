@@ -63,37 +63,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <BottomNav />
       <DiscreetVeil />
 
-      {/* Floating Discreet Mode Helper Toast from Stitch design */}
+      {/* One-time hint about the quick exit button */}
       {showHelper && (
         <aside
-          aria-label="Aide mode discret"
-          className="fixed bottom-16 md:bottom-6 right-4 z-40 max-w-xs transition-all duration-300 animate-slideUp"
+          aria-label="Astuce discrétion"
+          className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto z-40 md:max-w-xs animate-slideUp"
         >
-          <div className="bg-surface-container-lowest p-3.5 rounded-2xl shadow-xl border border-outline-variant/40 flex items-start gap-3 relative">
+          <div className="bg-surface-container-lowest p-3 pl-4 rounded-2xl shadow-soft border border-outline-variant/50 flex items-center gap-3">
+            <span aria-hidden="true" className="material-symbols-outlined text-[22px] text-primary">
+              visibility_off
+            </span>
+            <p className="font-body text-body-sm text-on-surface flex-1">
+              Quelqu&apos;un arrive ? Touche l&apos;œil en haut pour tout cacher.
+            </p>
             <button
               onClick={dismissHelper}
-              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center justify-center font-bold text-xs"
-              title="Fermer"
               type="button"
+              aria-label="Fermer l'astuce"
+              className="w-10 h-10 shrink-0 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant"
             >
-              ✕
+              <span aria-hidden="true" className="material-symbols-outlined text-[20px]">close</span>
             </button>
-            <div className="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary shrink-0">
-              <span className="material-symbols-outlined text-[18px]">security</span>
-            </div>
-            <div className="pr-2">
-              <div className="font-label text-label-md text-on-surface font-semibold mb-0.5">
-                Mode Discret disponible
-              </div>
-              <p className="font-body text-body-sm text-on-surface-variant leading-tight">
-                Un proche approche ? Appuie sur{" "}
-                <span className="hidden md:inline">
-                  <strong className="text-on-surface font-semibold">Échap deux fois</strong>{" "}
-                  ou{" "}
-                </span>
-                le bouton œil en haut pour masquer l&apos;écran immédiatement.
-              </p>
-            </div>
           </div>
         </aside>
       )}

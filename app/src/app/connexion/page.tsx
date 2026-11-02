@@ -58,22 +58,17 @@ export default function ConnexionPage() {
   return (
     <div className="w-full max-w-[500px] mx-auto px-margin py-space-md md:py-space-xl flex flex-col gap-space-lg">
       <div className="text-center flex flex-col items-center gap-3">
-        <div className="w-14 h-14 rounded-full bg-primary-fixed/40 flex items-center justify-center text-primary text-2xl shadow-xs">
+        <div aria-hidden="true" className="w-14 h-14 rounded-full bg-primary-fixed/40 flex items-center justify-center text-primary text-2xl">
           🚪
         </div>
-        <div className="flex flex-col gap-1">
-          <h1 className="font-display text-display text-on-surface font-bold">
-            Rebonjour
-          </h1>
-          <p className="font-body text-body-md text-on-surface-variant">
-            Frappe à la porte et retrouve ton espace intime confidentiel.
-          </p>
-        </div>
+        <h1 className="font-display text-display text-on-surface font-bold">
+          Rebonjour
+        </h1>
       </div>
 
       <div className="bg-surface-container-lowest rounded-t-[2.5rem] rounded-b-2xl p-6 md:p-8 shadow-xs border border-outline-variant/30 flex flex-col gap-5">
         {error && (
-          <div className="p-3.5 rounded-xl bg-error-container text-on-error-container font-label text-label-sm">
+          <div role="alert" className="p-3.5 rounded-xl bg-error-container text-on-error-container font-label text-label-md">
             {error}
           </div>
         )}
@@ -82,9 +77,9 @@ export default function ConnexionPage() {
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="pseudonym"
-              className="font-label text-label-sm text-on-surface font-semibold"
+              className="font-label text-label-md text-on-surface font-semibold"
             >
-              Ton pseudonyme poétique :
+              Ton pseudo
             </label>
             <input
               id="pseudonym"
@@ -93,16 +88,17 @@ export default function ConnexionPage() {
               onChange={(e) => setPseudonym(e.target.value)}
               placeholder="Ex : FleurDeBaobab"
               required
-              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+              autoComplete="username"
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="password"
-              className="font-label text-label-sm text-on-surface font-semibold"
+              className="font-label text-label-md text-on-surface font-semibold"
             >
-              Mot de passe secret :
+              Mot de passe
             </label>
             <input
               id="password"
@@ -111,27 +107,28 @@ export default function ConnexionPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+              autoComplete="current-password"
+              className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 font-body text-body-md text-on-surface"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading || !pseudonym.trim() || !password}
-            className="mt-2 w-full py-3.5 rounded-full bg-primary text-on-primary font-label text-label-md font-semibold hover:bg-primary-container transition-all shadow-xs disabled:opacity-50"
+            className="mt-2 w-full py-3.5 rounded-full bg-primary text-on-primary font-label text-label-lg font-semibold hover:bg-primary-container transition-all shadow-xs disabled:opacity-50"
           >
-            {loading ? "Vérification..." : "Ouvrir la porte"}
+            {loading ? "Connexion…" : "Me connecter"}
           </button>
         </form>
 
         <div className="text-center pt-2 border-t border-outline-variant/20">
-          <p className="font-body text-body-sm text-on-surface-variant">
-            Tu n&apos;as pas encore de refuge ?{" "}
+          <p className="font-body text-body-md text-on-surface-variant">
+            Pas encore de compte ?{" "}
             <Link
               href="/onboarding"
               className="text-primary font-semibold hover:underline"
             >
-              Créer mon espace gratuit
+              Créer mon espace
             </Link>
           </p>
         </div>
