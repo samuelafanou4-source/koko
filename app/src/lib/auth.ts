@@ -84,28 +84,34 @@ export async function verifyRefreshToken(
   }
 }
 
+// "lax": the session survives opening Koko from a WhatsApp or search link
+// (strict dropped the cookies on that first navigation), while cross-site POSTs stay blocked.
+function cookieOptions(maxAge: number) {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    path: "/",
+    maxAge,
+  };
+}
+
+async function setAccessCookie(accessToken: string): Promise<void> {
+  const cookieStore = await cookies();
+  cookieStore.set(ACCESS_COOKIE_NAME, accessToken, cookieOptions(15 * 60));
+}
+
 export async function setAuthCookies(
   accessToken: string,
   refreshToken: string
 ): Promise<void> {
+  await setAccessCookie(accessToken);
   const cookieStore = await cookies();
-  const isProduction = process.env.NODE_ENV === "development";
-
-  cookieStore.set(ACCESS_COOKIE_NAME, accessToken, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: "strict",
-    path: "/",
-    maxAge: 15 * 60,
-  });
-
-  cookieStore.set(REFRESH_COOKIE_NAME, refreshToken, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: "strict",
-    path: "/",
-    maxAge: 7 * 24 * 60 * 60,
-  });
+  cookieStore.set(
+    REFRESH_COOKIE_NAME,
+    refreshToken,
+    cookieOptions(7 * 24 * 60 * 60)
+  );
 }
 
 export async function clearAuthCookies(): Promise<void> {
@@ -159,21 +165,10 @@ export async function rotateRefreshSession(
     role: account.role,
   };
 
-  const accessToken = await createAccessToken(payload);
-  const newRefresh = await createRefreshToken(account.id, account.anonId);
-
-  await identityDb.$transaction([
-    identityDb.session.delete({ where: { id: session.id } }),
-    identityDb.session.create({
-      data: {
-        userId: account.id,
-        refreshTokenHash: hashRefreshToken(newRefresh),
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      },
-    }),
-  ]);
-
-  await setAuthCookies(accessToken, newRefresh);
+  // Only a new access token: the refresh token stays the same until it expires.
+  // Rotating it here made parallel requests (page + /api/auth/me + data fetches)
+  // race on the same session, and every loser logged her out.
+  await setAccessCookie(await createAccessToken(payload));
   return payload;
 }
 

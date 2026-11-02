@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAppStore } from "@/lib/store";
 import { AuthGate } from "@/components/auth/AuthGate";
 
 export default function ParametresPage() {
-  const router = useRouter();
   const { user, isDiscreetMode, toggleDiscreetMode, clearLocalTraces, logout } =
     useAppStore();
 
@@ -36,7 +34,9 @@ export default function ParametresPage() {
       // Ignore
     }
     logout();
-    router.push("/");
+    // Full reload on purpose: router.refresh() only clears the current route
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    window.location.assign("/");
   };
 
   const handleDeleteAllData = async () => {
@@ -49,7 +49,9 @@ export default function ParametresPage() {
         clearLocalTraces();
         setDeleteSuccess(true);
         setTimeout(() => {
-          router.push("/");
+          // Full reload on purpose: router.refresh() only clears the current route
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+          window.location.assign("/");
         }, 2500);
       } else {
         alert("Une erreur est survenue lors de la suppression.");
@@ -59,7 +61,9 @@ export default function ParametresPage() {
       clearLocalTraces();
       setDeleteSuccess(true);
       setTimeout(() => {
-        router.push("/");
+        // Full reload on purpose: router.refresh() only clears the current route
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+        window.location.assign("/");
       }, 2500);
     }
   };

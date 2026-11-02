@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAppStore } from "@/lib/store";
 
 export default function ConnexionPage() {
-  const router = useRouter();
   const { setUser } = useAppStore();
 
   const [pseudonym, setPseudonym] = useState("");
@@ -43,7 +41,14 @@ export default function ConnexionPage() {
         isAuthenticated: true,
       });
 
-      router.push("/tableau-de-bord");
+      // Full page load: the client router cache may still hold the
+      // "redirect to /connexion" answers prefetched while she was logged out
+      const next = new URLSearchParams(window.location.search).get("next");
+      const target =
+        next && next.startsWith("/") && !next.startsWith("//")
+          ? next
+          : "/tableau-de-bord";
+      window.location.assign(target);
     } catch {
       setError("Erreur de connexion réseau.");
       setLoading(false);

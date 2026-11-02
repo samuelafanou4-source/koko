@@ -59,6 +59,8 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  // No prefetch: a prefetched redirect to /connexion stays cached after login
+                  prefetch={false}
                   className={`px-space-md py-1.5 transition-all rounded-full font-label text-label-md ${
                     isActive
                       ? "bg-primary-container text-on-primary-container font-semibold shadow-xs"
@@ -127,6 +129,8 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
+                // No prefetch: a prefetched redirect to /connexion stays cached after login
+                prefetch={false}
                 className={`px-2.5 py-1 rounded-full font-label text-label-sm transition-colors ${
                   isActive
                     ? "bg-primary-container text-on-primary-container font-semibold"

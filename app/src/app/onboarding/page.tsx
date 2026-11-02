@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAppStore } from "@/lib/store";
 
 export default function OnboardingPage() {
-  const router = useRouter();
   const { setUser } = useAppStore();
 
   const [pseudonym, setPseudonym] = useState("FleurDeBaobab");
@@ -70,7 +68,10 @@ export default function OnboardingPage() {
         isAuthenticated: true,
       });
 
-      router.push("/tableau-de-bord");
+      // Full page load to drop router-cached redirects from the logged-out state
+      // (router.refresh() only clears the current route)
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.assign("/tableau-de-bord");
     } catch {
       setError("Erreur de connexion. Vérifie ta connexion internet.");
       setSubmitting(false);

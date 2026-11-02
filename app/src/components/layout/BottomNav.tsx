@@ -22,6 +22,8 @@ export function BottomNav() {
           <Link
             key={tab.href}
             href={tab.href}
+            // No prefetch: a prefetched redirect to /connexion stays cached after login
+            prefetch={false}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all ${
               isActive
                 ? "text-primary font-bold bg-primary-fixed/50"
