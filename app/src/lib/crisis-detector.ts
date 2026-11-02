@@ -6,6 +6,11 @@
  * - Urgences médicales aiguës (hémorragies, douleurs intolérables)
  */
 
+import { EMERGENCY_CONTACTS } from "@/lib/constants";
+
+const { nationalEmergencyNumber, ligneVerteEcoute, chuLomeUrgence } =
+  EMERGENCY_CONTACTS;
+
 export interface CrisisDetectionResult {
   isCrisis: boolean;
   category?: "SELF_HARM" | "VIOLENCE" | "MEDICAL_EMERGENCY";
@@ -90,12 +95,12 @@ export function detectCrisis(text: string): CrisisDetectionResult {
           {
             label: "Appeler la Ligne d'écoute (Gratuit)",
             action: "CALL",
-            phone: "80 00 00 11",
+            phone: ligneVerteEcoute,
           },
           {
-            label: "Numéro d'urgence nationale 1011",
+            label: `Numéro d'urgence nationale ${nationalEmergencyNumber}`,
             action: "CALL",
-            phone: "1011",
+            phone: nationalEmergencyNumber,
           },
           {
             label: "Rejoindre l'espace SOS Écoute",
@@ -120,14 +125,14 @@ export function detectCrisis(text: string): CrisisDetectionResult {
           "🧡 Ce que tu as vécu n'est absolument pas de ta faute. Tu as le droit d'être protégée, soignée et écoutée sans aucun jugement. Une sage-femme ou psychologue peut t'accompagner immédiatement dans la plus stricte discrétion.",
         recommendedActions: [
           {
-            label: "Appeler le 1011 (Secours & Protection)",
+            label: `Appeler le ${nationalEmergencyNumber} (Secours & Protection)`,
             action: "CALL",
-            phone: "1011",
+            phone: nationalEmergencyNumber,
           },
           {
-            label: "Ligne Verte Écoute (80 00 00 11)",
+            label: `Ligne Verte Écoute (${ligneVerteEcoute})`,
             action: "CALL",
-            phone: "80 00 00 11",
+            phone: ligneVerteEcoute,
           },
           {
             label: "Voir le centre de santé partenaire le plus proche",
@@ -154,12 +159,12 @@ export function detectCrisis(text: string): CrisisDetectionResult {
           {
             label: "CHU Sylvanus Olympio Lomé",
             action: "CALL",
-            phone: "+228 22 21 25 01",
+            phone: chuLomeUrgence,
           },
           {
-            label: "Secours d'urgence (1011)",
+            label: `Secours d'urgence (${nationalEmergencyNumber})`,
             action: "CALL",
-            phone: "1011",
+            phone: nationalEmergencyNumber,
           },
         ],
       };

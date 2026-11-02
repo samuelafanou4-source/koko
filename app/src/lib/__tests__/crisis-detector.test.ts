@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { detectCrisis } from "../crisis-detector";
+import { EMERGENCY_CONTACTS } from "../constants";
 
 describe("Crisis Detection Engine", () => {
   it("detects self-harm expressions and returns caring message + emergency lines", () => {
@@ -15,7 +16,7 @@ describe("Crisis Detection Engine", () => {
       expect(res.category).toBe("SELF_HARM");
       expect(res.reassuranceMessage).toContain("Respire profondément");
       expect(res.recommendedActions).toBeDefined();
-      expect(res.recommendedActions?.some((a) => a.phone === "1014")).toBe(true);
+      expect(res.recommendedActions?.some((a) => a.phone === EMERGENCY_CONTACTS.nationalEmergencyNumber)).toBe(true);
     }
   });
 
@@ -39,6 +40,7 @@ describe("Crisis Detection Engine", () => {
     expect(res.isCrisis).toBe(true);
     expect(res.category).toBe("MEDICAL_EMERGENCY");
     expect(res.reassuranceMessage).toContain("examen médical sans délai");
+    expect(res.recommendedActions?.some((a) => a.phone === EMERGENCY_CONTACTS.chuLomeUrgence)).toBe(true);
   });
 
   it("returns isCrisis: false for normal health and cycle questions", () => {

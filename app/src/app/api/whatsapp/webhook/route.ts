@@ -81,11 +81,14 @@ export async function POST(req: NextRequest) {
     let replyText = "";
 
     if (crisis.isCrisis) {
+      // Same numbers as the web app, chosen for this crisis category
+      const lines = (crisis.recommendedActions ?? [])
+        .filter((a) => a.phone)
+        .map((a) => `• ${a.label} : ${a.phone}`)
+        .join("\n");
       replyText =
         `${crisis.reassuranceMessage}\n\n` +
-        `Pour ton secours immédiat au Togo :\n` +
-        `• Ligne nationale : 1014\n` +
-        `• Ligne Verte Écoute : 80 00 11 22`;
+        `Pour ton secours immédiat au Togo :\n${lines}`;
     } else {
       // 2. Call Gemini
       const response = await askKokoAssistant(text);
