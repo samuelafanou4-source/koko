@@ -10,8 +10,9 @@ RÈGLES D'OR ABSOLUES :
    - Ne pose JAMAIS de diagnostic ferme.
    - Ne prescris JAMAIS de posologie ni de doses médicamenteuses précises.
    - Précise régulièrement avec douceur que tu es une guide IA d'orientation et non un professionnel de santé.
-3. CONTEXTE LOCAL TOGOLAIS : Tu connais les réalités des jeunes femmes au Togo (stress des examens universitaires, coût des soins, pudeur sociale, structures d'accueil comme l'ATBEF, les centres médico-sociaux universitaires CNOU, les cliniques partenaires).
-4. ENCOURAGEMENT : Encourage toujours l'utilisatrice à consulter une sage-femme ou un médecin dans un centre de santé partenaire labellisé si les doutes persistent.
+3. CONTEXTE LOCAL TOGOLAIS : Tu connais les réalités des jeunes femmes au Togo (stress des examens universitaires, coût des soins, pudeur sociale, structures d'accueil comme l'ATBEF ou les centres médico-sociaux universitaires).
+4. ENCOURAGEMENT : Encourage toujours l'utilisatrice à consulter une sage-femme ou un médecin dans un centre de santé si les doutes persistent.
+7. VÉRITÉ : N'invente JAMAIS de prix, d'adresse, de numéro de téléphone, de nom de centre partenaire ni de statistique. Ne dis jamais qu'un centre est partenaire de Koko. Pour les urgences, renvoie uniquement vers l'espace SOS de l'application.
 5. SUJETS COUVERTS : Contraception régulière et d'urgence (pilule du lendemain dans le délai des 72h), règles douloureuses et cycles irréguliers, mycoses et infections, consentement et première fois, anxiété et bien-être mental.
 6. FORMAT : N'utilise JAMAIS de markdown : aucun astérisque, aucun dièse, aucun gras. Écris en texte simple, en paragraphes courts. Pour une liste, commence chaque ligne par "• ". Réponds en 5 à 8 lignes maximum.`;
 
@@ -85,9 +86,9 @@ function generateCompassionateFallback(prompt: string): string {
     return (
       "🌸 Bonjour ma sœur. Tout d'abord, respire doucement : un retard de règles arrive fréquemment et ne signifie pas automatiquement une grossesse.\n\n" +
       "Le stress des cours, un changement d'alimentation, la fatigue ou une émotion forte peuvent décaler l'ovulation de plusieurs jours.\n\n" +
-      "• **Si tu as eu un rapport récent sans protection** : Un test urinaire en pharmacie (environ 1 000 à 1 500 FCFA à Lomé) est fiable dès le 1er jour de retard présumé.\n" +
+      "• **Si tu as eu un rapport récent sans protection** : Un test urinaire de pharmacie est fiable à partir du 1er jour de retard des règles.\n" +
       "• **Pilule du lendemain** : Efficace idéalement dans les 72h suivant le rapport.\n\n" +
-      "Rappelle-toi que je suis une guide numérique et non un médecin. Tu peux te rendre dans un centre partenaire ATBEF ou CNOU avec ton Pass Santé Koko pour un accueil doux et sans jugement."
+      "Rappelle-toi que je suis une guide numérique et non un médecin. Une sage-femme ou un médecin dans un centre de santé pourra t'accompagner sans jugement."
     );
   }
 
@@ -102,7 +103,7 @@ function generateCompassionateFallback(prompt: string): string {
       "• Applique une bouillotte d'eau chaude sur ton bas-ventre pour détendre les muscles utérins.\n" +
       "• Bois une infusion tiède de menthe ou de gingembre doux.\n" +
       "• Évite le café et les boissons très sucrées qui augmentent l'inflammation.\n\n" +
-      "Si la douleur t'empêche de suivre les cours ou si elle résiste aux antalgiques usuels, viens faire vérifier cela auprès d'une sage-femme dans un de nos centres partenaires."
+      "Si la douleur t'empêche de suivre les cours ou si elle résiste aux antalgiques usuels, fais vérifier cela auprès d'une sage-femme ou d'un médecin."
     );
   }
 
@@ -117,14 +118,14 @@ function generateCompassionateFallback(prompt: string): string {
       "• Les pertes blanches normales sont inodores et transparentes ou blanchâtres.\n" +
       "• Si les pertes ressemblent à du lait caillé avec de fortes démangeaisons, il peut s'agir d'une mycose (très courante après un traitement antibiotique, avec la transpiration ou les sous-vêtements synthétiques).\n" +
       "• **Conseil d'hygiène** : Lave uniquement la vulve externe avec de l'eau tiède, sans savon décapant et jamais de douche vaginale interne.\n\n" +
-      "N'hésite pas à faire un petit examen rapide et discret dans un cabinet partenaire pour avoir le traitement adapté."
+      "N'hésite pas à consulter une sage-femme ou un médecin pour un examen rapide et le traitement adapté."
     );
   }
 
   return (
     "🌸 Merci pour ta question. Tu es dans un espace totalement protégé, confidentiel et sans jugement.\n\n" +
     "Prendre soin de son corps et s'interroger sur sa santé intime est un acte de force et de maturité. Chaque corps féminin a son propre rythme.\n\n" +
-    "Je suis à tes côtés pour t'expliquer comment fonctionne ton cycle, te guider sur la contraception ou t'apaiser face au stress. Si ta situation nécessite un avis médical, rappelle-toi que tu peux obtenir un bon anonyme pour consulter dans un centre partenaire bienveillant à Lomé ou Kara."
+    "Je suis à tes côtés pour t'expliquer comment fonctionne ton cycle, te guider sur la contraception ou t'apaiser face au stress. Si ta situation nécessite un avis médical, une sage-femme ou un médecin pourra t'examiner en toute confidentialité."
   );
 }
 

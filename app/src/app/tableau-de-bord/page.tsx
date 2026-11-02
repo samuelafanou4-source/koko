@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/lib/store";
 import { CycleRing } from "@/components/ui/CycleRing";
 import { MoodPicker } from "@/components/ui/MoodPicker";
@@ -9,6 +10,21 @@ import { AuthGate } from "@/components/auth/AuthGate";
 export default function DashboardPage() {
   const { user } = useAppStore();
   const pseudonym = user.pseudonym || "toi";
+  const [prediction, setPrediction] = useState<{
+    currentDay: number;
+    totalCycleLength: number;
+    periodLength: number;
+    phaseLabel: string;
+    phaseSummary: string;
+    daysUntilNextPeriod: number;
+  } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/cycle")
+      .then((res) => res.json())
+      .then((data) => setPrediction(data.prediction ?? null))
+      .catch(() => {});
+  }, []);
 
   return (
     <AuthGate>
@@ -37,7 +53,7 @@ export default function DashboardPage() {
           </h1>
           <p className="font-body text-body-md text-on-surface-variant">
             Heureuse de te retrouver dans ton cocon protecteur. Comment te sens-tu
-            aujourd’hui à Lomé ?
+            aujourd’hui ?
           </p>
         </div>
 
@@ -91,41 +107,48 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-4 sm:gap-6 py-2">
-            <CycleRing
-              currentDay={14}
-              totalCycleLength={28}
-              periodLength={5}
-              phaseLabel="Ovulation"
-              size="sm"
-            />
-            <div className="flex flex-col gap-1 min-w-0">
-              <div className="flex items-center gap-1.5 text-tertiary">
-                <span className="material-symbols-outlined text-[18px]">
-                  wb_sunny
+          {prediction ? (
+            <div className="flex items-center gap-4 sm:gap-6 py-2">
+              <CycleRing
+                currentDay={prediction.currentDay}
+                totalCycleLength={prediction.totalCycleLength}
+                periodLength={prediction.periodLength}
+                phaseLabel={prediction.phaseLabel}
+                size="sm"
+              />
+              <div className="flex flex-col gap-1 min-w-0">
+                <span className="font-label text-label-md font-semibold text-tertiary">
+                  {prediction.phaseLabel}
                 </span>
-                <span className="font-label text-label-md font-semibold">
-                  Phase ovulatoire
-                </span>
+                <h3 className="font-headline text-headline-sm text-on-surface leading-snug font-bold">
+                  {prediction.phaseSummary}
+                </h3>
+                <p className="font-body text-body-sm text-on-surface-variant">
+                  Prochaines règles estimées dans environ{" "}
+                  <strong className="text-on-surface">
+                    {prediction.daysUntilNextPeriod} jours
+                  </strong>
+                  .
+                </p>
               </div>
-              <h3 className="font-headline text-headline-sm text-on-surface leading-snug font-bold truncate">
-                Fertilité plus élevée
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 py-2">
+              <h3 className="font-headline text-headline-sm text-on-surface font-bold">
+                Commence ton suivi de cycle
               </h3>
               <p className="font-body text-body-sm text-on-surface-variant">
-                Prochaines règles prévues dans environ{" "}
-                <strong className="text-on-surface">14 jours</strong>.
+                Note la date de début de tes dernières règles dans ton carnet pour
+                voir tes estimations ici.
               </p>
+              <Link
+                href="/carnet-intime"
+                className="self-start mt-1 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary font-label text-label-md hover:bg-primary-container transition-colors"
+              >
+                Noter mes règles
+              </Link>
             </div>
-          </div>
-
-          <div className="p-3 rounded-2xl bg-surface-container flex items-center gap-2.5">
-            <span className="material-symbols-outlined text-primary text-[18px]">
-              self_improvement
-            </span>
-            <p className="font-body text-body-sm text-on-surface-variant">
-              Période propice à l&apos;énergie créative et à l&apos;ouverture aux autres.
-            </p>
-          </div>
+          )}
         </div>
       </div>
 
@@ -215,15 +238,15 @@ export default function DashboardPage() {
             </h3>
             <p className="font-body text-body-md text-on-surface-variant leading-relaxed">
               Calendrier menstruel doux, prévisions d’ovulation, notes de symptômes
-              et rappels discrets sous forme de messages neutres sur WhatsApp.
+              et notes chiffrées que toi seule peux lire.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
             <div className="flex items-center gap-1.5 text-on-surface-variant font-label text-label-sm">
               <span className="material-symbols-outlined text-[16px] text-secondary">
-                notifications_active
+                lock
               </span>
-              <span>Rappels camouflés</span>
+              <span>Notes chiffrées</span>
             </div>
             <Link
               href="/carnet-intime"
@@ -255,7 +278,7 @@ export default function DashboardPage() {
             </h3>
             <p className="font-body text-body-md text-on-surface-variant leading-relaxed">
               Forum 100% anonyme entre jeunes femmes et étudiantes au Togo. Échange
-              sans tabou, veillé par des sages-femmes togolaises.
+              sans tabou. Chaque message est relu avant publication.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
@@ -291,11 +314,12 @@ export default function DashboardPage() {
               </span>
             </div>
             <h3 className="font-headline text-headline-md text-on-surface font-bold group-hover:text-primary transition-colors">
-              Pass Santé Partenaire
+              Pass Santé
             </h3>
             <p className="font-body text-body-md text-on-surface-variant leading-relaxed">
-              Accède à des cliniques et cabinets de santé partenaires à Lomé, Kara
-              et sur les campus avec ton bon anonyme. Tarifs réduits garantis.
+              Un bon de consultation anonyme, valable dans les centres de santé qui
+              ont signé une convention avec Koko. Seuls les centres vérifiés y
+              apparaissent.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
@@ -309,7 +333,7 @@ export default function DashboardPage() {
               href="/pass-sante"
               className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-primary-container text-on-primary-container font-label text-label-lg font-semibold shadow-xs hover:bg-primary hover:text-on-primary transition-colors"
             >
-              <span>Voir les centres partenaires</span>
+              <span>Ouvrir le Pass Santé</span>
               <span className="material-symbols-outlined text-[18px]">
                 arrow_forward
               </span>
@@ -331,8 +355,8 @@ export default function DashboardPage() {
               Besoin d’une écoute urgente ou d’un conseil médical immédiat ?
             </h3>
             <p className="font-body text-body-sm text-on-surface-variant">
-              Une sage-femme bénévole togolaise te répond dans la plus stricte
-              confidentialité. Appel ou chat anonyme sans laisser de traces.
+              Des lignes d&apos;écoute gratuites et confidentielles au Togo, et un
+              exercice de respiration pour t&apos;apaiser tout de suite.
             </p>
           </div>
         </div>

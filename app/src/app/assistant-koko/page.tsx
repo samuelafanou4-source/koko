@@ -324,8 +324,9 @@ export default function AssistantKokoPage() {
               Besoin d’une voix humaine ?
             </h3>
             <p className="font-body text-body-sm text-on-surface-variant leading-relaxed">
-              Koko est une guide numérique. Si tu as besoin d’un soutien d’urgence
-              ou de parler à une sage-femme togolaise, utilise le service SOS.
+              Koko est une guide numérique, pas une soignante. Si tu as besoin
+              d’un soutien d’urgence, l’espace SOS te donne les lignes d’écoute
+              gratuites au Togo.
             </p>
             <Link
               href="/sos-ecoute"

@@ -1,4 +1,5 @@
-const CACHE_NAME = "koko-static-v1";
+// Bump to purge old caches on every client
+const CACHE_NAME = "koko-static-v2";
 const OFFLINE_URL = "/offline";
 
 const PRECACHE_ASSETS = [
@@ -48,13 +49,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Handle static assets
-  if (
-    request.destination === "style" ||
-    request.destination === "script" ||
-    request.destination === "image" ||
-    request.destination === "font"
-  ) {
+  // Build assets have content-hashed names: safe to serve cache-first
+  if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(
       caches.match(request).then((cached) => {
         if (cached) return cached;
@@ -66,6 +62,27 @@ self.addEventListener("fetch", (event) => {
           return networkRes;
         });
       })
+    );
+    return;
+  }
+
+  // Other assets keep a stable URL: network first, cache only as offline fallback
+  if (
+    request.destination === "style" ||
+    request.destination === "script" ||
+    request.destination === "image" ||
+    request.destination === "font"
+  ) {
+    event.respondWith(
+      fetch(request)
+        .then((networkRes) => {
+          if (networkRes.status === 200) {
+            const copy = networkRes.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return networkRes;
+        })
+        .catch(() => caches.match(request).then((res) => res || Response.error()))
     );
   }
 });

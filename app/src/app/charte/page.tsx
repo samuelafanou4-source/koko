@@ -80,10 +80,10 @@ export default function ChartePage() {
         </h3>
         <p className="font-body text-body-md text-on-surface-variant leading-relaxed">
           L&apos;Assistant Koko est un outil d&apos;orientation, de soutien chaleureux
-          et d&apos;information validée par des professionnelles de santé togolaises.
-          Il ne délivre pas d&apos;ordonnances ni de diagnostics fermes. En cas de
-          situation médicale complexe, il t&apos;orientera toujours vers l&apos;un de nos
-          centres de santé partenaires.
+          et d&apos;information générale basé sur une intelligence artificielle.
+          Il ne remplace pas un professionnel de santé et ne délivre ni
+          ordonnance ni diagnostic. En cas de situation médicale complexe, il
+          t&apos;encouragera toujours à consulter une sage-femme ou un médecin.
         </p>
         <div className="pt-2">
           <Link

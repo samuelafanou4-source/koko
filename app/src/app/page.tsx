@@ -1,6 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
-import { DoorMotif } from "@/components/ui/DoorMotif";
 import { EMERGENCY_CONTACTS, PLATFORM_CONFIG } from "@/lib/constants";
+// Self-hosted Unsplash photos (see src/assets/landing/CREDITS.md)
+import heroPhoto from "@/assets/landing/koko-hero.jpg";
+import confiancePhoto from "@/assets/landing/koko-confiance.jpg";
+import cerclePhoto from "@/assets/landing/koko-cercle.jpg";
 
 // Real questions young women ask: each opens the assistant with the text prefilled
 const COMMON_QUESTIONS = [
@@ -17,7 +21,7 @@ const PILLARS = [
     href: "/assistant-koko",
     icon: "chat_bubble",
     title: "Assistant Koko",
-    tag: "WhatsApp & Web • 24h/24",
+    tag: "24h/24 • Web",
     text: "Pose tes questions sur la contraception, les infections, les règles ou le stress. Koko t'écoute et t'oriente, avec un bouton SOS toujours à portée.",
     cta: "Parler à Koko",
     tone: "bg-primary-fixed/45 text-primary",
@@ -27,7 +31,7 @@ const PILLARS = [
     icon: "calendar_month",
     title: "Le Carnet Intime",
     tag: "Suivi du cycle",
-    text: "Visualise ton cycle, anticipe tes règles et ton ovulation, note ton humeur. Reçois des rappels de contraception discrets sur WhatsApp.",
+    text: "Visualise ton cycle, anticipe tes règles et ton ovulation, note ton humeur. Tout reste chiffré et effaçable en un clic.",
     cta: "Ouvrir mon carnet",
     tone: "bg-secondary-container/70 text-secondary",
   },
@@ -36,7 +40,7 @@ const PILLARS = [
     icon: "diversity_1",
     title: "Le Cercle Koko",
     tag: "Communauté sous pseudo",
-    text: "Échange avec d'autres jeunes filles sous pseudonyme strict. Les discussions sont veillées par des sages-femmes et des psychologues diplômées.",
+    text: "Échange avec d'autres jeunes filles sous pseudonyme strict. Chaque message est relu par l'équipe de modération avant d'être publié.",
     cta: "Rejoindre le Cercle",
     tone: "bg-tertiary-fixed/70 text-tertiary",
   },
@@ -44,9 +48,9 @@ const PILLARS = [
     href: "/pass-sante",
     icon: "qr_code_2",
     title: "Le Pass Santé",
-    tag: "Consultations à prix réduit",
-    text: "Obtiens un bon de consultation anonyme et trouve le centre « girl-friendly » le plus proche (ATBEF, CNOU, cliniques partenaires).",
-    cta: "Voir les centres",
+    tag: "Bientôt",
+    text: "Un bon de consultation anonyme, valable dans les centres de santé « girl-friendly » qui signent une convention avec Koko. Réseau en cours de construction.",
+    cta: "Découvrir le Pass",
     tone: "bg-sage-soft text-sage",
   },
 ];
@@ -71,7 +75,7 @@ const PRIVACY_PROMISES = [
   {
     icon: "badge",
     title: "Juste un pseudo",
-    text: "Ni nom, ni numéro, ni e-mail. Personne ne peut savoir que c'est toi.",
+    text: "Ni nom, ni numéro, ni e-mail ne te sont demandés pour créer ton espace.",
   },
   {
     icon: "lock",
@@ -86,7 +90,7 @@ const PRIVACY_PROMISES = [
   {
     icon: "delete_sweep",
     title: "Tout effacer en 1 clic",
-    text: "Tu restes maîtresse de tes données, conformément aux exigences de l'IPDCP.",
+    text: "Tu restes maîtresse de tes données : ton compte et ton carnet s'effacent quand tu veux.",
   },
 ];
 
@@ -114,8 +118,8 @@ export default function LandingPage() {
             <p className="font-body text-body-lg text-on-surface-variant max-w-xl mt-5">
               Règles, contraception, infections, stress ou moment difficile :
               ici tu peux tout demander, sans être jugée, sans donner ton nom.
-              Koko t&apos;écoute et t&apos;accompagne jusqu&apos;à une vraie
-              consultation si tu en as besoin.
+              Koko t&apos;écoute et t&apos;oriente vers les bonnes ressources
+              si tu en as besoin.
             </p>
 
             <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3 mt-8">
@@ -150,28 +154,48 @@ export default function LandingPage() {
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-[16px] text-sage">check_circle</span>
-                Aussi sur WhatsApp
+                Gratuit
               </li>
             </ul>
           </div>
 
-          <div className="relative flex flex-col items-center">
-            <div className="animate-floatSoft">
-              <DoorMotif />
+          {/* Arch-framed photo: the open door of Koko */}
+          <div className="relative mx-auto w-full max-w-[20rem] sm:max-w-[22rem] lg:max-w-[24rem] mb-16 lg:mb-8">
+            <div className="absolute -inset-3 rounded-t-full rounded-b-[2.75rem] border-2 border-primary/15 pointer-events-none" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-t-full rounded-b-[2.5rem] bg-primary-fixed shadow-soft">
+              <Image
+                src={heroPhoto}
+                alt="Jeune femme souriante qui écrit sur son téléphone"
+                fill
+                priority
+                placeholder="blur"
+                sizes="(min-width: 1024px) 384px, (min-width: 640px) 352px, 320px"
+                className="object-cover"
+              />
             </div>
-            <div className="mt-10 w-full max-w-sm bg-surface-container-lowest/90 backdrop-blur rounded-3xl p-4 shadow-soft border border-outline-variant/50 flex flex-col gap-2.5">
-              <div className="self-end max-w-[85%] px-4 py-2.5 rounded-2xl rounded-br-md bg-primary text-on-primary font-body text-body-sm">
-                J&apos;ai peur d&apos;être enceinte, je ne sais pas à qui en parler…
-              </div>
-              <div className="self-start max-w-[90%] px-4 py-2.5 rounded-2xl rounded-bl-md bg-surface-container font-body text-body-sm text-on-surface">
-                Tu as bien fait de frapper à la porte 🤍 On va regarder ça
-                ensemble, calmement. Personne d&apos;autre ne verra cette
-                conversation.
-              </div>
-              <span className="self-start font-label text-label-xs uppercase text-on-surface-variant flex items-center gap-1">
-                <span className="material-symbols-outlined text-[13px]">lock</span>
-                Conversation privée
+
+            <div className="absolute top-10 -right-3 sm:-right-10 flex items-center gap-2 px-3 py-2 rounded-2xl bg-surface-container-lowest shadow-soft border border-outline-variant/40 animate-floatSoft">
+              <span className="w-8 h-8 rounded-full bg-sage-soft text-sage flex items-center justify-center">
+                <span className="material-symbols-outlined text-[18px]">lock</span>
               </span>
+              <span className="font-label text-label-md text-on-surface leading-tight">
+                Juste un pseudo,
+                <br />
+                jamais ton nom
+              </span>
+            </div>
+
+            <div className="absolute -bottom-12 -left-3 sm:-left-12 w-[16.5rem] bg-surface-container-lowest/95 backdrop-blur rounded-3xl p-3.5 shadow-soft border border-outline-variant/40 flex flex-col gap-2">
+              <span className="font-label text-label-xs uppercase text-on-surface-variant">
+                Exemple de conversation
+              </span>
+              <div className="self-end max-w-[90%] px-3.5 py-2 rounded-2xl rounded-br-md bg-primary text-on-primary font-body text-body-sm">
+                J&apos;ai peur d&apos;être enceinte…
+              </div>
+              <div className="self-start max-w-[95%] px-3.5 py-2 rounded-2xl rounded-bl-md bg-surface-container font-body text-body-sm text-on-surface">
+                Tu as bien fait de frapper à la porte 🤍 On regarde ça ensemble,
+                calmement.
+              </div>
             </div>
           </div>
         </div>
@@ -281,8 +305,9 @@ export default function LandingPage() {
               <p className="font-body text-body-md opacity-85 mt-4">
                 Par manque d&apos;argent, par peur du regard des autres ou faute de
                 professionnel·le·s disponibles, beaucoup se soignent seules ou ne
-                se soignent pas du tout. Koko lève ces barrières : gratuit,
-                anonyme et relié à de vrais centres de santé.
+                se soignent pas du tout. Koko veut lever ces barrières : un
+                espace gratuit et anonyme pour s&apos;informer, être écoutée et
+                trouver de l&apos;aide.
               </p>
             </div>
             <div className="grid sm:grid-cols-3 gap-3">
@@ -304,38 +329,49 @@ export default function LandingPage() {
 
       {/* Privacy promises */}
       <section className="w-full max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-12 md:py-16">
-        <div className="flex flex-col items-center text-center mb-10">
-          <span className="font-label text-label-sm uppercase tracking-wider text-secondary mb-2">
-            Ton secret est bien gardé
-          </span>
-          <h2 className="font-headline text-headline-lg-mobile md:text-display text-on-surface font-bold">
-            « Ici, personne ne te juge. »
-          </h2>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {PRIVACY_PROMISES.map((p) => (
-            <div
-              key={p.title}
-              className="rounded-3xl bg-secondary-fixed/50 border border-secondary-container p-6 flex flex-col gap-3"
-            >
-              <span className="w-11 h-11 rounded-full bg-surface-container-lowest text-secondary flex items-center justify-center shadow-xs">
-                <span className="material-symbols-outlined text-[22px]">{p.icon}</span>
-              </span>
-              <h3 className="font-headline text-headline-sm text-on-surface font-bold">
-                {p.title}
-              </h3>
-              <p className="font-body text-body-sm text-on-surface-variant">{p.text}</p>
+        <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-8 lg:gap-12 items-center">
+          <div className="relative aspect-[4/3] lg:aspect-[4/5] overflow-hidden rounded-t-[3rem] lg:rounded-t-full rounded-b-[2rem] bg-secondary-fixed shadow-soft">
+            <Image
+              src={confiancePhoto}
+              alt="Jeune femme de profil portant un foulard en pagne kente"
+              fill
+              placeholder="blur"
+              sizes="(min-width: 1024px) 420px, 100vw"
+              className="object-cover object-[center_35%]"
+            />
+          </div>
+
+          <div>
+            <span className="font-label text-label-sm uppercase tracking-wider text-secondary">
+              Ton secret est bien gardé
+            </span>
+            <h2 className="font-headline text-headline-lg-mobile md:text-display text-on-surface font-bold mt-2 mb-7">
+              « Ici, personne ne te juge. »
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {PRIVACY_PROMISES.map((p) => (
+                <div
+                  key={p.title}
+                  className="rounded-3xl bg-secondary-fixed/50 border border-secondary-container p-5 flex flex-col gap-2.5"
+                >
+                  <span className="w-10 h-10 rounded-full bg-surface-container-lowest text-secondary flex items-center justify-center shadow-xs">
+                    <span className="material-symbols-outlined text-[20px]">{p.icon}</span>
+                  </span>
+                  <h3 className="font-headline text-headline-sm text-on-surface font-bold">
+                    {p.title}
+                  </h3>
+                  <p className="font-body text-body-sm text-on-surface-variant">{p.text}</p>
+                </div>
+              ))}
             </div>
-          ))}
+            <Link
+              href="/charte"
+              className="inline-block mt-6 font-label text-label-md text-secondary hover:underline"
+            >
+              Lire la charte de discrétion
+            </Link>
+          </div>
         </div>
-        <p className="text-center mt-6">
-          <Link
-            href="/charte"
-            className="font-label text-label-md text-secondary hover:underline"
-          >
-            Lire la charte de discrétion
-          </Link>
-        </p>
       </section>
 
       {/* SOS */}
@@ -376,26 +412,38 @@ export default function LandingPage() {
 
       {/* Final CTA */}
       <section className="w-full max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-12 md:py-16">
-        <div className="relative overflow-hidden rounded-t-[3rem] rounded-b-[2rem] bg-primary text-on-primary px-6 py-12 md:py-16 text-center flex flex-col items-center">
+        <div className="relative overflow-hidden rounded-t-[3rem] rounded-b-[2rem] bg-primary text-on-primary grid md:grid-cols-2 items-stretch">
           <div className="absolute -bottom-24 -left-16 w-72 h-72 rounded-full bg-primary-fixed/20 blur-2xl pointer-events-none" />
-          <div className="absolute -top-20 -right-10 w-64 h-64 rounded-full bg-secondary-container/20 blur-2xl pointer-events-none" />
-          <p className="relative font-label text-label-md uppercase tracking-wider opacity-80">
-            Ko-ko… c&apos;est toi ?
-          </p>
-          <h2 className="relative font-display text-headline-lg md:text-display font-bold mt-2 max-w-2xl">
-            {PLATFORM_CONFIG.slogan}
-          </h2>
-          <p className="relative font-body text-body-md opacity-90 mt-3 max-w-lg">
-            Crée ton espace en 30 secondes avec un simple pseudo. Tu peux tout
-            effacer quand tu veux.
-          </p>
-          <Link
-            href="/onboarding"
-            className="relative mt-7 inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-surface-container-lowest text-primary font-label text-label-lg hover:bg-primary-fixed transition-colors"
-          >
-            Commencer anonymement
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </Link>
+          <div className="relative px-6 py-12 md:py-16 md:pl-12 flex flex-col items-center md:items-start text-center md:text-left">
+            <p className="font-label text-label-md uppercase tracking-wider opacity-80">
+              Ko-ko… c&apos;est toi ?
+            </p>
+            <h2 className="font-display text-headline-lg md:text-display font-bold mt-2 max-w-md">
+              {PLATFORM_CONFIG.slogan}
+            </h2>
+            <p className="font-body text-body-md opacity-90 mt-3 max-w-md">
+              Entre sœurs, on prend soin les unes des autres. Crée ton espace
+              en 30 secondes avec un simple pseudo.
+            </p>
+            <Link
+              href="/onboarding"
+              className="mt-7 inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-surface-container-lowest text-primary font-label text-label-lg hover:bg-primary-fixed transition-colors"
+            >
+              Commencer anonymement
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </Link>
+          </div>
+          <div className="relative min-h-[240px] md:min-h-full">
+            <Image
+              src={cerclePhoto}
+              alt="Deux amies assises qui rient ensemble"
+              fill
+              placeholder="blur"
+              sizes="(min-width: 768px) 560px, 100vw"
+              className="object-cover object-[center_30%]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-primary via-primary/10 to-transparent" />
+          </div>
         </div>
       </section>
     </div>

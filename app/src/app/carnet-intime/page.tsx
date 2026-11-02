@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CycleRing } from "@/components/ui/CycleRing";
 import { CycleCalendar } from "@/components/ui/CycleCalendar";
 import { MoodPicker } from "@/components/ui/MoodPicker";
@@ -21,26 +21,19 @@ interface CyclePredictionView {
 
 export default function CarnetIntimePage() {
   const { isDiscreetMode, toggleDiscreetMode } = useAppStore();
-  const [prediction, setPrediction] = useState<CyclePredictionView>({
-    currentDay: 14,
-    totalCycleLength: 28,
-    periodLength: 5,
-    phaseLabel: "Phase",
-    midwifeTip: "Observe ton rythme avec douceur. Les prévisions s’affinent avec tes cycles enregistrés.",
-    daysUntilNextPeriod: 14,
-  });
+  // No forecast until she records a real period start
+  const [prediction, setPrediction] = useState<CyclePredictionView | null>(null);
   const [lastStart, setLastStart] = useState<string | null>(null);
+  const [periodStartInput, setPeriodStartInput] = useState("");
+  const [periodError, setPeriodError] = useState("");
+  const [savingPeriod, setSavingPeriod] = useState(false);
 
   const [flow, setFlow] = useState<"light" | "medium" | "heavy">("medium");
   const [mood, setMood] = useState("sereine");
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([
-    "Crampes douces",
-    "Énergie haute",
-  ]);
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [secretNote, setSecretNote] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [codedWhatsapp, setCodedWhatsapp] = useState(true);
-  const [autoVeil, setAutoVeil] = useState(true);
+  const [saveError, setSaveError] = useState("");
 
   const availableSymptoms = [
     "Crampes douces",
@@ -53,20 +46,50 @@ export default function CarnetIntimePage() {
     "Besoin de calme",
   ];
 
-  useEffect(() => {
+  const loadCycle = useCallback(() => {
     fetch("/api/cycle")
       .then((res) => res.json())
       .then((data) => {
-        if (data.prediction) setPrediction(data.prediction);
-        if (data.cycles?.[0]?.startDate) setLastStart(data.cycles[0].startDate);
+        setPrediction(data.prediction ?? null);
+        setLastStart(data.cycles?.[0]?.startDate ?? null);
       })
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    loadCycle();
+  }, [loadCycle]);
+
+  const handleSavePeriodStart = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!periodStartInput || savingPeriod) return;
+    setSavingPeriod(true);
+    setPeriodError("");
+    try {
+      const res = await fetch("/api/cycle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "CYCLE_START", startDate: periodStartInput }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setPeriodError(data.error || "Impossible d'enregistrer la date pour le moment.");
+        return;
+      }
+      setPeriodStartInput("");
+      loadCycle();
+    } catch {
+      setPeriodError("Pas de connexion. Réessaie dans un instant.");
+    } finally {
+      setSavingPeriod(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaveError("");
     try {
-      await fetch("/api/cycle", {
+      const res = await fetch("/api/cycle", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -77,10 +100,15 @@ export default function CarnetIntimePage() {
           note: secretNote,
         }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setSaveError(data.error || "Ton ressenti n'a pas pu être enregistré.");
+        return;
+      }
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch {
-      setSaveSuccess(true);
+      setSaveError("Pas de connexion : ton ressenti n'a pas été enregistré.");
     }
   };
 
@@ -144,6 +172,56 @@ export default function CarnetIntimePage() {
         </div>
       </div>
 
+      {/* Record a real period start: the only source of predictions */}
+      <form
+        onSubmit={handleSavePeriodStart}
+        className="rounded-2xl bg-surface-container-lowest p-space-md sm:p-space-lg border border-outline-variant/40 flex flex-col sm:flex-row sm:items-end gap-3"
+      >
+        <div className="flex flex-col gap-1.5 flex-1">
+          <label
+            htmlFor="period-start"
+            className="font-label text-label-md text-on-surface font-semibold"
+          >
+            {prediction
+              ? "Tes nouvelles règles ont commencé ?"
+              : "Quand tes dernières règles ont-elles commencé ?"}
+          </label>
+          <input
+            id="period-start"
+            type="date"
+            value={periodStartInput}
+            max={new Date().toISOString().slice(0, 10)}
+            onChange={(e) => setPeriodStartInput(e.target.value)}
+            className="w-full sm:max-w-xs px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/40 focus:outline-none focus:border-primary font-body text-body-md text-on-surface"
+          />
+          {periodError && (
+            <p className="font-body text-body-sm text-error">{periodError}</p>
+          )}
+        </div>
+        <button
+          type="submit"
+          disabled={!periodStartInput || savingPeriod}
+          className="px-6 py-3 rounded-full bg-primary text-on-primary font-label text-label-md font-semibold hover:bg-primary-container transition-all disabled:opacity-50"
+        >
+          {savingPeriod ? "Enregistrement..." : "Enregistrer la date"}
+        </button>
+      </form>
+
+      {!prediction ? (
+        <div className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-space-md sm:p-space-lg md:p-space-xl border border-outline-variant/30 flex flex-col items-center text-center gap-3">
+          <span className="w-14 h-14 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center">
+            <span className="material-symbols-outlined text-[28px]">calendar_month</span>
+          </span>
+          <h2 className="font-headline text-headline-md text-on-surface font-bold">
+            Ton cycle s&apos;affichera ici
+          </h2>
+          <p className="font-body text-body-md text-on-surface-variant max-w-md">
+            Indique la date de début de tes dernières règles juste au-dessus.
+            Koko ne fait aucune estimation sans tes propres données.
+          </p>
+        </div>
+      ) : (
+      <>
       {/* Main Cycle Visual Card with Arch Top */}
       <div className="relative overflow-hidden rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-space-md sm:p-space-lg md:p-space-xl shadow-xs border border-outline-variant/30">
         <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-tertiary-fixed/30 blur-3xl pointer-events-none" />
@@ -204,7 +282,7 @@ export default function CarnetIntimePage() {
                     Dans environ {prediction.daysUntilNextPeriod} jours
                   </span>
                   <span className="font-body text-body-sm text-tertiary font-semibold">
-                    Régularité stable calculée sur tes cycles
+                    Estimation : elle s&apos;affine à chaque cycle enregistré
                   </span>
                 </div>
               </div>
@@ -224,10 +302,10 @@ export default function CarnetIntimePage() {
             <div className="bg-surface/80 backdrop-blur-md rounded-2xl p-space-md flex flex-col gap-2 shadow-xs border border-outline-variant/20">
               <div className="flex items-center justify-between">
                 <span className="font-label text-label-md text-on-surface-variant font-semibold">
-                  Conseil de la sage-femme pour ton jour de cycle (J-{prediction.currentDay}) :
+                  Conseil bien-être pour ton jour de cycle :
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label text-label-sm font-semibold">
-                  Énergie haute
+                  Jour {prediction.currentDay}
                 </span>
               </div>
               <p className="font-body text-body-md text-on-surface leading-relaxed">
@@ -248,6 +326,12 @@ export default function CarnetIntimePage() {
           fertileWindowEnd={prediction.fertileWindowEnd}
         />
       </div>
+      <p className="font-body text-body-sm text-on-surface-variant -mt-3">
+        Ces dates sont des estimations et ne remplacent pas une contraception :
+        ne t&apos;y fie pas pour éviter une grossesse.
+      </p>
+      </>
+      )}
 
       {/* Daily Journal Form Section */}
       <section
@@ -361,6 +445,12 @@ export default function CarnetIntimePage() {
               <span>Ton ressenti a été chiffré et sauvegardé avec amour dans ton carnet.</span>
             </div>
           )}
+          {saveError && (
+            <div className="p-3 rounded-xl bg-error-container text-on-error-container font-label text-label-md flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px]">error</span>
+              <span>{saveError}</span>
+            </div>
+          )}
 
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
@@ -395,20 +485,9 @@ export default function CarnetIntimePage() {
                 sans mentionner le mot règles ni santé.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => setCodedWhatsapp(!codedWhatsapp)}
-              className={`w-12 h-7 rounded-full transition-colors relative shrink-0 ${
-                codedWhatsapp ? "bg-primary" : "bg-outline-variant"
-              }`}
-              title="Activer/Désactiver"
-            >
-              <span
-                className={`w-5 h-5 rounded-full bg-white absolute top-1 transition-transform ${
-                  codedWhatsapp ? "right-1" : "left-1"
-                }`}
-              />
-            </button>
+            <span className="px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label text-label-sm font-semibold shrink-0">
+              Bientôt
+            </span>
           </div>
 
           {/* Inactivity Veil Toggle */}
@@ -422,20 +501,9 @@ export default function CarnetIntimePage() {
                 (idéal en salle d&apos;étude ou en présence d&apos;amis).
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => setAutoVeil(!autoVeil)}
-              className={`w-12 h-7 rounded-full transition-colors relative shrink-0 ${
-                autoVeil ? "bg-primary" : "bg-outline-variant"
-              }`}
-              title="Activer/Désactiver"
-            >
-              <span
-                className={`w-5 h-5 rounded-full bg-white absolute top-1 transition-transform ${
-                  autoVeil ? "right-1" : "left-1"
-                }`}
-              />
-            </button>
+            <span className="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label text-label-sm font-semibold shrink-0">
+              Toujours actif
+            </span>
           </div>
         </div>
       </div>

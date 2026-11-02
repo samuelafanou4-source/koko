@@ -98,7 +98,7 @@ export default function LeCerclePage() {
       setShowCreateModal(false);
       setPostError(
         data.message ||
-          "Ton message sera visible après validation par une sage-femme ou une psychologue."
+          "Ton message sera visible après validation par l'équipe de modération."
       );
       fetchPosts();
     } catch {
@@ -232,7 +232,7 @@ export default function LeCerclePage() {
                 Espace Protégé
               </span>
               <span className="font-label text-label-sm text-primary font-semibold">
-                Modéré par des sages-femmes &amp; psychologues
+                Chaque message est relu avant publication
               </span>
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function LeCerclePage() {
           <div className="py-12 text-center rounded-2xl bg-surface-container-low border border-outline-variant/30 px-6">
             <p className="font-body text-body-md text-on-surface-variant">
               Aucune discussion validée pour le moment. Les messages restent privés
-              jusqu&apos;à la relecture d&apos;une sage-femme ou d&apos;une psychologue.
+              jusqu&apos;à leur relecture par l&apos;équipe de modération.
             </p>
           </div>
         ) : (
@@ -409,7 +409,7 @@ export default function LeCerclePage() {
             <p className="font-body text-body-sm text-on-surface-variant">
               Exprime-toi librement sous ton pseudonyme{" "}
               <strong className="text-on-surface">
-                {user.pseudonym || "toi"}</strong>. Les sages-femmes veillent
+                {user.pseudonym || "toi"}</strong>. L&apos;équipe de modération veille
               sur la sérénité des échanges.
             </p>
 

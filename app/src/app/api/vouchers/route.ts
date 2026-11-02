@@ -3,7 +3,6 @@ import { z } from "zod";
 import crypto from "crypto";
 import { getCurrentUser } from "@/lib/auth";
 import { healthDb } from "@/lib/db/health";
-import { MOCK_HEALTH_CENTERS } from "@/lib/health-centers-data";
 import { logServerError } from "@/lib/logger";
 
 const createVoucherSchema = z.object({
@@ -26,16 +25,9 @@ export async function POST(req: NextRequest) {
 
     const { healthCenterId } = parsed.data;
 
-    // Find center from database or mock list
-    let center = await healthDb.healthCenter.findUnique({
+    const center = await healthDb.healthCenter.findUnique({
       where: { id: healthCenterId },
     });
-
-    if (!center) {
-      center = (MOCK_HEALTH_CENTERS.find(
-        (c) => c.id === healthCenterId
-      ) as unknown as typeof center) || null;
-    }
 
     if (!center) {
       return NextResponse.json(
@@ -57,48 +49,31 @@ export async function POST(req: NextRequest) {
       validUntil: expiresAt.toISOString(),
     });
 
-    // Try persisting voucher if database table available
-    try {
-      const dbVoucher = await healthDb.healthVoucher.create({
-        data: {
-          code,
-          anonId,
-          healthCenterId: center.id,
-          status: "ACTIVE",
-          expiresAt,
-          qrData,
-        },
-      });
+    // A voucher only exists once stored: the center must be able to validate it
+    const dbVoucher = await healthDb.healthVoucher.create({
+      data: {
+        code,
+        anonId,
+        healthCenterId: center.id,
+        status: "ACTIVE",
+        expiresAt,
+        qrData,
+      },
+    });
 
-      return NextResponse.json({
-        success: true,
-        voucher: {
-          id: dbVoucher.id,
-          code: dbVoucher.code,
-          centerName: center.name,
-          centerAddress: center.address,
-          city: center.city,
-          priceInfo: center.priceInfo,
-          expiresAt: dbVoucher.expiresAt,
-          qrData: dbVoucher.qrData,
-        },
-      });
-    } catch {
-      // Fallback for demo when DB is not yet migrated
-      return NextResponse.json({
-        success: true,
-        voucher: {
-          id: `voucher_${code}`,
-          code,
-          centerName: center.name,
-          centerAddress: center.address,
-          city: center.city,
-          priceInfo: center.priceInfo,
-          expiresAt: expiresAt.toISOString(),
-          qrData,
-        },
-      });
-    }
+    return NextResponse.json({
+      success: true,
+      voucher: {
+        id: dbVoucher.id,
+        code: dbVoucher.code,
+        centerName: center.name,
+        centerAddress: center.address,
+        city: center.city,
+        priceInfo: center.priceInfo,
+        expiresAt: dbVoucher.expiresAt,
+        qrData: dbVoucher.qrData,
+      },
+    });
   } catch {
     logServerError("vouchers.create");
     return NextResponse.json(

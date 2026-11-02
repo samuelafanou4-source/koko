@@ -1,11 +1,8 @@
 /**
- * KOKO PLATFORM CONSTANTS & METRICS
+ * KOKO PLATFORM CONSTANTS
  *
- * NOTE CONCERNANT LES DONNÉES DU PROTOTYPE :
- * Conformément aux directives de transparence et d'honnêteté, les chiffres
- * ci-dessous proviennent de maquettes UI de démonstration et sont annotés
- * avec un marqueur TODO pour permettre leur remplacement par des données réelles
- * vérifiées avant le déploiement public.
+ * Règle : aucune donnée inventée n'est affichée aux utilisatrices.
+ * Tout chiffre, numéro ou partenaire ajouté ici doit être vérifié.
  */
 
 export const PLATFORM_CONFIG = {
@@ -14,20 +11,6 @@ export const PLATFORM_CONFIG = {
   description:
     "Refuge confidentiel et bienveillant pour la santé intime des jeunes femmes et étudiantes au Togo.",
   safeExitUrl: "https://fr.wikipedia.org/wiki/M%C3%A9t%C3%A9orologie", // Safe escape redirect target
-};
-
-export const MOCK_STATISTICS = {
-  // TODO: Remplacer par le nombre réel de questions traitées après le lancement
-  questionsAnsweredCount: "14 200+",
-  questionsAnsweredLabel: "Questions posées sans tabou (donnée prototype)",
-
-  // TODO: Remplacer par le nombre réel de structures et pharmacies partenaires conventionnées
-  partnerClinicsCount: "42",
-  partnerClinicsLabel: "Centres de santé & partenaires labellisés (donnée prototype)",
-
-  // Donnée technique réelle : suppression complète des données en 1 clic
-  dataEraseGuaranteed: "100%",
-  dataEraseLabel: "Données effaçables en 1 clic à tout moment",
 };
 
 export const EMERGENCY_CONTACTS = {

@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       success: true,
       pending: true,
       message:
-        "Ton message est en attente de validation par une sage-femme ou une psychologue.",
+        "Ton message est en attente de validation par l'équipe de modération.",
       post: {
         ...post,
         authorPseudonym: user.pseudonym,

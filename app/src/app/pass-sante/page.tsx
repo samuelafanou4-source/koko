@@ -3,11 +3,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { HealthCenterMap, MapCenterItem } from "@/components/map/HealthCenterMap";
 import { VoucherModal } from "@/components/vouchers/VoucherModal";
-import { MOCK_HEALTH_CENTERS } from "@/lib/health-centers-data";
+import Link from "next/link";
 import { AuthGate } from "@/components/auth/AuthGate";
+import { EMERGENCY_CONTACTS } from "@/lib/constants";
 
 export default function PassSantePage() {
-  const [centers, setCenters] = useState<MapCenterItem[]>(MOCK_HEALTH_CENTERS);
+  // Only verified centers from the database are ever displayed
+  const [centers, setCenters] = useState<MapCenterItem[]>([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [cityFilter, setCityFilter] = useState("all");
   const [selectedCenterId, setSelectedCenterId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -35,13 +38,12 @@ export default function PassSantePage() {
       }
       const res = await fetch(url);
       const data = await res.json();
-      if (data.centers && data.centers.length > 0) {
-        setCenters(data.centers);
-      }
+      setCenters(Array.isArray(data.centers) ? data.centers : []);
     } catch {
-      // Use mock centers on fallback
+      setCenters([]);
     } finally {
       setLoading(false);
+      setHasLoaded(true);
     }
   }, [cityFilter]);
 
@@ -84,6 +86,8 @@ export default function PassSantePage() {
       if (data.voucher) {
         setActiveVoucher(data.voucher);
         setIsVoucherOpen(true);
+      } else {
+        alert(data.error || "Impossible de générer le bon pour le moment.");
       }
     } catch {
       alert("Impossible de générer le bon pour le moment.");
@@ -102,14 +106,15 @@ export default function PassSantePage() {
             <span className="material-symbols-outlined text-[16px]">
               local_hospital
             </span>
-            <span>Réseau &quot;Girl-Friendly&quot; Conventionné</span>
+            <span>Réseau &quot;Girl-Friendly&quot;</span>
           </div>
           <h1 className="font-display text-display text-on-surface font-bold">
-            Pass Santé Partenaire
+            Pass Santé
           </h1>
           <p className="font-body text-body-md text-on-surface-variant">
-            Bénéficie d&apos;un accueil chaleureux et d&apos;une consultation à tarif
-            protégé dans nos structures partenaires au Togo, sans révéler ton identité.
+            Un bon de consultation anonyme, valable uniquement dans les centres
+            qui ont signé une convention avec Koko. Chaque centre affiché ici a
+            été vérifié par l&apos;équipe.
           </p>
         </div>
 
@@ -135,6 +140,42 @@ export default function PassSantePage() {
         </div>
       </div>
 
+      {hasLoaded && centers.length === 0 && cityFilter === "all" ? (
+        <div className="rounded-3xl bg-surface-container-low border border-outline-variant/50 p-6 md:p-8 flex flex-col gap-4">
+          <div className="w-12 h-12 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
+            <span className="material-symbols-outlined text-[24px]">handshake</span>
+          </div>
+          <h2 className="font-headline text-headline-md text-on-surface font-bold">
+            Le réseau de centres partenaires arrive bientôt
+          </h2>
+          <p className="font-body text-body-md text-on-surface-variant max-w-2xl">
+            Nous finalisons les conventions avec des centres de santé
+            accueillants. Tant qu&apos;un centre n&apos;a pas signé, nous préférons
+            ne rien afficher plutôt que de t&apos;envoyer vers une adresse ou un
+            tarif non vérifiés.
+          </p>
+          <p className="font-body text-body-md text-on-surface font-semibold">
+            En attendant, tu peux être écoutée et orientée gratuitement :
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <a
+              href={`tel:${EMERGENCY_CONTACTS.ligneVerteEcoute}`}
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-primary text-on-primary font-label text-label-md hover:bg-primary-container transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">call</span>
+              Ligne Verte {EMERGENCY_CONTACTS.ligneVerteEcoute}
+            </a>
+            <Link
+              href="/assistant-koko"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant font-label text-label-md hover:border-primary/50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
+              Poser ma question à Koko
+            </Link>
+          </div>
+        </div>
+      ) : (
+      <>
       {/* City Filters */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
@@ -253,6 +294,8 @@ export default function PassSantePage() {
           </div>
         ))}
       </div>
+      </>
+      )}
 
       {/* Voucher Display Modal */}
       <VoucherModal

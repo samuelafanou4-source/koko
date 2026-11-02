@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { EMERGENCY_CONTACTS } from "@/lib/constants";
-import { MOCK_HEALTH_CENTERS } from "@/lib/health-centers-data";
 import { healthDb } from "@/lib/db/health";
 import { sortNearestFirst } from "@/lib/haversine";
 
@@ -20,14 +19,11 @@ export async function GET(req: NextRequest) {
   const lat = parsed.success ? parsed.data.lat : undefined;
   const lng = parsed.success ? parsed.data.lng : undefined;
 
-  let centers = MOCK_HEALTH_CENTERS;
+  let centers: Awaited<ReturnType<typeof healthDb.healthCenter.findMany>> = [];
   try {
-    const dbCenters = await healthDb.healthCenter.findMany();
-    if (dbCenters.length > 0) {
-      centers = dbCenters;
-    }
+    centers = await healthDb.healthCenter.findMany();
   } catch {
-    // Keep placeholder list when the health database is unavailable.
+    // No center rather than an unverified one.
   }
 
   let nearest = centers[0] || null;
@@ -38,6 +34,5 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     contacts: EMERGENCY_CONTACTS,
     nearestCenter: nearest,
-    note: "Les numéros d'urgence affichés sont des données prototype à confirmer avant lancement.",
   });
 }

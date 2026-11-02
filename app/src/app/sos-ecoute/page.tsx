@@ -206,11 +206,11 @@ export default function SosEcoutePage() {
           </span>
           <div className="flex flex-col">
             <div className="font-headline text-headline-sm text-on-surface font-bold">
-              Tu préfères te rendre dans une clinique partenaire ?
+              Tu préfères consulter en personne ?
             </div>
             <p className="font-body text-body-sm text-on-surface-variant">
-              Génère un bon anonyme avec code QR pour consulter une sage-femme
-              conventionnée à tarif jeune fille.
+              Le Pass Santé te donnera un bon anonyme pour les centres qui ont
+              signé une convention avec Koko.
             </p>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function SosEcoutePage() {
           href="/pass-sante"
           className="px-6 py-3 rounded-full bg-primary text-on-primary font-label text-label-md font-semibold hover:bg-primary-container transition-colors whitespace-nowrap shadow-xs"
         >
-          Voir les centres partenaires
+          Ouvrir le Pass Santé
         </Link>
       </div>
     </div>

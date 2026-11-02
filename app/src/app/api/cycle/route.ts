@@ -9,12 +9,10 @@ import { logServerError } from "@/lib/logger";
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) {
-    // Return sample demo prediction for anonymous/unregistered visitors
-    const sampleStartDate = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-    const prediction = predictCycle(sampleStartDate, 28, 5);
+    // Never show an invented prediction: no data, no forecast
     return NextResponse.json({
       authenticated: false,
-      prediction,
+      prediction: null,
       cycles: [],
       recentLogs: [],
     });
@@ -54,16 +52,11 @@ export async function GET() {
     const { averageCycleLength, averagePeriodLength } =
       calculateAverages(cycleEntries);
 
+    // Forecast only from a period start she actually recorded
     const latestCycle = cycleEntries[0];
-    const lastStartDate = latestCycle
-      ? latestCycle.startDate
-      : new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
-
-    const prediction = predictCycle(
-      lastStartDate,
-      averageCycleLength,
-      averagePeriodLength
-    );
+    const prediction = latestCycle
+      ? predictCycle(latestCycle.startDate, averageCycleLength, averagePeriodLength)
+      : null;
 
     return NextResponse.json({
       authenticated: true,
@@ -116,10 +109,17 @@ export async function POST(req: NextRequest) {
     const anonId = user.anonId;
 
     if (type === "CYCLE_START") {
+      const start = new Date(startDate || Date.now());
+      if (Number.isNaN(start.getTime()) || start.getTime() > Date.now()) {
+        return NextResponse.json(
+          { error: "Indique une date de début de règles valide (pas dans le futur)." },
+          { status: 400 }
+        );
+      }
       const entry = await healthDb.cycleEntry.create({
         data: {
           anonId,
-          startDate: new Date(startDate || Date.now()),
+          startDate: start,
           endDate: endDate ? new Date(endDate) : null,
           flowIntensity: flowIntensity || "medium",
           periodLength: 5,
