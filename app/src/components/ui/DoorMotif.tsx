@@ -68,25 +68,25 @@ export function DoorMotif() {
               {/* Inner open door frame */}
               <path
                 d="M28 110V52C28 39.85 37.85 30 50 30C62.15 30 72 39.85 72 52V110"
-                fill="#587d63"
+                fill="#b5506f"
                 fillOpacity="0.15"
-                stroke="#587d63"
+                stroke="#b5506f"
                 strokeWidth="3"
                 strokeLinecap="round"
               />
               {/* Gentle golden door knob / hearth */}
-              <circle cx="64" cy="72" r="4.5" fill="#894c35" />
+              <circle cx="64" cy="72" r="4.5" fill="#d98e73" />
               {/* Botanical sprout inside the arch */}
               <path
                 d="M50 85C50 75 42 70 42 70C42 70 48 70 50 75C52 70 58 70 58 70C58 70 50 75 50 85Z"
-                fill="#3f644b"
+                fill="#4f7a5e"
               />
             </svg>
           </div>
         </div>
       </div>
 
-      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-surface-container-lowest text-primary px-3 py-1 rounded-full shadow-sm font-label text-label-sm flex items-center gap-1 border border-outline-variant/30">
+      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-surface-container-lowest text-primary px-3 py-1 rounded-full shadow-sm font-label text-label-sm flex items-center gap-1 whitespace-nowrap border border-outline-variant/30">
         <span className="material-symbols-outlined text-[14px]">touch_app</span>
         <span>{isKnocked ? "Ko-ko ! Entre doucement..." : "Touche la porte"}</span>
       </div>

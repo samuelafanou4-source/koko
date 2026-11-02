@@ -28,6 +28,12 @@ export default function AssistantKokoPage() {
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Prefill from the landing page (?q=...) without sending: she stays in control
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setInput(q.slice(0, 500));
+  }, []);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);

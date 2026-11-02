@@ -55,7 +55,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <ServiceWorkerRegister />
       <Navbar />
 
-      <main className="w-full pt-20 md:pt-24 bg-surface min-h-[calc(100vh-140px)] flex flex-col flex-1">
+      <main className="w-full pt-16 md:pt-[7.5rem] lg:pt-20 bg-surface min-h-[calc(100vh-140px)] flex flex-col flex-1">
         {children}
       </main>
 
@@ -87,8 +87,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </div>
               <p className="font-body text-body-sm text-on-surface-variant leading-tight">
                 Un proche approche ? Appuie sur{" "}
-                <strong className="text-on-surface font-semibold">Échap</strong>{" "}
-                ou le bouton œil en haut pour masquer l&apos;écran immédiatement.
+                <span className="hidden md:inline">
+                  <strong className="text-on-surface font-semibold">Échap deux fois</strong>{" "}
+                  ou{" "}
+                </span>
+                le bouton œil en haut pour masquer l&apos;écran immédiatement.
               </p>
             </div>
           </div>

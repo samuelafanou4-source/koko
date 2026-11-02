@@ -4,8 +4,8 @@
   "description": "Sanctuaire d'écoute active, de suivi de cycle et d'orientation médicale pour les jeunes femmes au Togo.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fcf9f4",
-  "theme_color": "#3f644b",
+  "background_color": "#fcf8f5",
+  "theme_color": "#9e3b5a",
   "lang": "fr",
   "icons": [
     {

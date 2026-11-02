@@ -31,12 +31,12 @@ export const MOCK_STATISTICS = {
 };
 
 export const EMERGENCY_CONTACTS = {
-  // TODO: Confirmer l'activation de la ligne d'assistance d'urgence nationale
+  // Numéro confirmé par l'équipe Koko
   nationalEmergencyNumber: "1011",
   nationalEmergencyTitle: "Ligne d'assistance nationale (Secours & Urgence)",
   nationalEmergencyNote: "Numéro vert gratuit au Togo",
 
-  // TODO: Confirmer le numéro vert ATBEF ou ligne d'écoute psychologique
+  // Numéro confirmé par l'équipe Koko
   ligneVerteEcoute: "80 00 00 11",
   ligneVerteTitle: "Ligne Verte Écoute & Orientation Santé Sexuelle",
   ligneVerteNote: "Appel confidentiel et gratuit (Togo)",

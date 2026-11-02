@@ -15,7 +15,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-lg border-t border-outline-variant/30 md:hidden py-1.5 px-3 flex items-center justify-around shadow-lg">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-lg border-t border-outline-variant/40 md:hidden pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] px-2 flex items-center justify-around">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href;
         return (
@@ -24,7 +24,7 @@ export function BottomNav() {
             href={tab.href}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all ${
               isActive
-                ? "text-primary font-bold scale-105"
+                ? "text-primary font-bold bg-primary-fixed/50"
                 : "text-on-surface-variant hover:text-on-surface"
             }`}
           >

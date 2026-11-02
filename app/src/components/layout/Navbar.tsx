@@ -20,8 +20,8 @@ export function Navbar() {
   const currentPseudo = user.pseudonym || "Invitée";
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-outline-variant/20">
-      <div className="h-20 max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between gap-space-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
+      <div className="h-16 md:h-20 max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between gap-space-sm">
         {/* Brand */}
         <div className="flex items-center gap-space-md">
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -38,7 +38,7 @@ export function Navbar() {
                   strokeWidth="8"
                   strokeLinecap="round"
                 />
-                <circle cx="62" cy="72" r="6" fill="#894c35" />
+                <circle cx="62" cy="72" r="6" fill="#d98e73" />
               </svg>
             </div>
             <div className="flex flex-col">
@@ -80,7 +80,7 @@ export function Navbar() {
           {/* SOS Écoute */}
           <Link
             href="/sos-ecoute"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container hover:bg-tertiary hover:text-on-tertiary transition-all font-label text-label-md shadow-xs"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant hover:bg-tertiary hover:text-on-tertiary transition-all font-label text-label-md whitespace-nowrap"
           >
             <span className="material-symbols-outlined text-[16px]">call</span>
             <span className="font-semibold">SOS Écoute</span>
@@ -101,7 +101,7 @@ export function Navbar() {
           {/* Parameters & Privacy */}
           <Link
             href="/parametres"
-            className="w-8 h-8 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
+            className="hidden sm:flex w-8 h-8 rounded-full bg-surface-container-low hover:bg-surface-container items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"
             title="Confidentialité & Paramètres"
           >
             <span className="material-symbols-outlined text-[18px]">tune</span>
@@ -118,8 +118,8 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Top Tabs for quick one-thumb switching */}
-      <div className="lg:hidden flex items-center justify-around bg-surface-container-low/70 py-1.5 px-margin border-t border-outline-variant/10">
+      {/* Tablet tabs (mobile uses the bottom nav instead) */}
+      <div className="hidden md:flex lg:hidden items-center justify-around bg-surface-container-low/70 py-1.5 px-margin border-t border-outline-variant/10">
         <nav className="flex items-center justify-between w-full">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;

@@ -36,7 +36,7 @@ export function CycleRing({
           cy="50"
           fill="none"
           r={radius}
-          stroke="#e5e2dd"
+          stroke="#eadad6"
           strokeWidth="7"
         />
 
@@ -60,7 +60,7 @@ export function CycleRing({
           cy="50"
           fill="none"
           r={radius}
-          stroke="#3f644b"
+          stroke="#9e3b5a"
           strokeWidth="7"
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
