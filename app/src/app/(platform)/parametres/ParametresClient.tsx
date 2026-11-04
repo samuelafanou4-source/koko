@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppStore } from "@/lib/store";
 import { useSessionUser } from "@/components/auth/SessionProvider";
 import { logoutEverywhere } from "@/lib/client-session";
+import { SectionBoundary } from "@/components/errors/SectionBoundary";
 
 export default function ParametresPage() {
   const { isDiscreetMode, toggleDiscreetMode, clearLocalTraces } = useAppStore();
@@ -93,6 +94,7 @@ export default function ParametresPage() {
       )}
 
       {/* Account Info Card */}
+      <SectionBoundary name="settings-account">
       <div className="rounded-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col gap-4 shadow-xs">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -125,8 +127,10 @@ export default function ParametresPage() {
           </span>
         </div>
       </div>
+      </SectionBoundary>
 
       {/* Discretion Options */}
+      <SectionBoundary name="settings-discretion">
       <div className="rounded-2xl bg-surface-container-lowest p-6 border border-outline-variant/30 flex flex-col gap-5 shadow-xs">
         <h2 className="font-headline text-headline-sm text-on-surface font-bold">
           Discrétion &amp; Sécurité physique
@@ -177,7 +181,9 @@ export default function ParametresPage() {
           </button>
         </div>
       </div>
+      </SectionBoundary>
 
+      <SectionBoundary name="settings-sessions">
       <div className="rounded-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col gap-3">
         <h2 className="font-headline text-headline-sm text-on-surface font-bold">
           Sessions actives
@@ -211,8 +217,10 @@ export default function ParametresPage() {
           ))
         )}
       </div>
+      </SectionBoundary>
 
       {/* Danger Zone: Delete Data */}
+      <SectionBoundary name="settings-delete">
       <div className="rounded-2xl bg-tertiary-fixed/20 p-6 border border-tertiary-container/30 flex flex-col gap-4 shadow-xs">
         <div className="flex items-center gap-2 text-tertiary font-headline text-headline-sm font-bold">
           <span aria-hidden="true" className="material-symbols-outlined text-[22px]">
@@ -260,6 +268,7 @@ export default function ParametresPage() {
           </div>
         )}
       </div>
+      </SectionBoundary>
     </div>
   );
 }

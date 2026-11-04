@@ -66,7 +66,7 @@ Pourquoi `sameSite=lax` et pas `strict` : avec `strict`, ouvrir Koko depuis un l
 ## 🚀 Guide d'installation rapide
 
 ### 1. Prérequis
-- Node.js version 20 LTS ou 22 LTS
+- Node.js 20.12 ou plus récent (22 LTS conseillé)
 - Deux bases de données PostgreSQL distinctes (ex: Supabase, Neon ou PostgreSQL local)
 
 ### 2. Installation propre des dépendances
@@ -93,17 +93,31 @@ Renseignez ensuite vos deux URLs de base de données et votre clé API optionnel
 - `GEMINI_API_KEY` : Clé API Google AI Studio pour l'Assistant Koko (si absente, un mode secours chaleureux prend le relais automatiquement).
 - `INACTIVITY_TIMEOUT_MINUTES` (optionnel) : minutes sans activité avant la déconnexion automatique (défaut `15`, de 1 à 1440).
 
-### 4. Génération et migration des deux schémas Prisma
-Koko sépare strictement les modèles identité et santé :
+### 4. Génération et migrations des deux bases
+Les deux clients Prisma (`src/generated/`, non versionnés) sont régénérés automatiquement à chaque `npm install` et avant chaque `npm run build`. Vous pouvez aussi lancer :
 ```bash
-# Générer les clients Prisma
 npm run db:generate
+```
 
-# Déployer les schémas sur vos deux bases
-npm run db:migrate
+Chaque base a son propre historique de migrations : `prisma/migrations/identity` et `prisma/migrations/health`.
 
-# Pour synchroniser directement en développement sans fichier de migration :
-npm run prisma:push
+```bash
+npm run db:deploy     # applique les migrations en attente sur les DEUX bases
+npm run db:status     # état des migrations des deux bases
+npm run db:migrate    # développement : crée une nouvelle migration après une modification de schéma
+```
+
+`db:deploy` utilise `IDENTITY_DIRECT_URL` / `HEALTH_DIRECT_URL` si elles sont définies, sinon `IDENTITY_DATABASE_URL` / `HEALTH_DATABASE_URL`. Les migrations ne doivent pas passer par le pooler « Transaction » de Supabase (port 6543) : utilisez la connexion directe ou le pooler « Session » (port 5432).
+
+**Quand lancer `db:deploy` en production ?** Avant de déployer une version qui contient un nouveau dossier dans `prisma/migrations/`. Depuis votre poste, avec les URL directes de production dans votre terminal (jamais dans un fichier versionné) :
+```bash
+IDENTITY_DIRECT_URL="…" HEALTH_DIRECT_URL="…" npm run db:deploy
+```
+
+**Bases créées avant les migrations (avec `prisma db push`)** : leurs tables existent déjà. Une seule fois, marquez la migration initiale comme appliquée, puis vérifiez :
+```bash
+IDENTITY_DIRECT_URL="…" HEALTH_DIRECT_URL="…" npm run db:baseline
+IDENTITY_DIRECT_URL="…" HEALTH_DIRECT_URL="…" npm run db:status
 ```
 
 ### 5. Peuplement initial (Seed de démonstration)
@@ -122,12 +136,29 @@ npm run dev
 ```
 Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-### 7. Lancement des tests unitaires
+### 7. Tests
 ```bash
-npm test
+npm test            # tests unitaires (rapides, sans base de données)
+npm run test:db     # migrations depuis zéro + séparation identité/santé (PostgreSQL de test)
+npm run test:e2e    # parcours complets sur le build de PRODUCTION (Playwright)
 ```
+`test:db` et `test:e2e` démarrent eux-mêmes un PostgreSQL jetable (port 54329) : ils n'utilisent **jamais** vos vraies bases ni vos vrais secrets. Le premier lancement télécharge PostgreSQL ; pour Playwright, installez le navigateur une fois avec `npx playwright install chromium`.
 
-### 8. Construction et démarrage pour la production
+Les tests découvrent automatiquement toutes les pages et routes API de `src/app` : une nouvelle page non protégée fait échouer les tests.
+
+### 8. Avant chaque `git push` : `npm run predeploy`
+```bash
+npm run predeploy
+```
+Enchaîne, dans l'ordre : `tsc --noEmit`, lint, tests unitaires, tests de base de données, build de production, tests end-to-end. **Lancez-le avant chaque `git push`.** GitHub Actions (`.github/workflows/ci.yml`) refait les mêmes vérifications à chaque push et pull request.
+
+### 9. Après chaque déploiement : `npm run smoke`
+```bash
+npm run smoke -- https://koko-tg.vercel.app
+```
+Vérification en lecture seule (aucun compte créé) : pages publiques en 200, pages privées redirigées vers `/connexion`, API privées en 401 et `/api/health` au vert (bases, configuration, chiffrement).
+
+### 10. Construction et démarrage pour la production
 ```bash
 npm run build
 npm start
@@ -140,6 +171,33 @@ npm start
 - **Port 3000 déjà utilisé** : Lancez avec `npm run dev -- -p 3001` ou arrêtez le processus écoutant sur le port 3000.
 - **Erreur de variable d'environnement au démarrage** : Le validateur `src/lib/env.ts` affiche un message précis indiquant le nom exact de la variable manquante.
 - **Erreur de connexion Prisma** : Vérifiez que vos deux serveurs PostgreSQL sont en ligne et que les paramètres de connexion autorisent les requêtes avec le schéma public. Pour réinitialiser complètement les bases en local, utilisez `npm run db:reset`.
+
+### Erreurs en production (Vercel)
+
+**1. Lire l'état de santé.** Ouvrez `https://koko-tg.vercel.app/api/health` ou lancez `npm run smoke -- https://koko-tg.vercel.app`. Chaque vérification répond `ok` ou `ko`. `invalidEnv` donne le **nom** des variables à corriger, jamais leur valeur.
+
+**2. Trouver les logs.** Vercel > projet > **Logs**. Choisissez l'environnement *Production* et la bonne période.
+
+**3. Lire un « digest ».** L'écran d'erreur affiche une *Référence* : c'est le digest Next.js. Cherchez ce nombre dans les logs Vercel. Vous trouverez une ligne `[koko] request-error route=… digest=… code=…` avec :
+- la route concernée ;
+- un code sûr, par exemple `PG_42P05` (erreur PostgreSQL) ou `P2021` (table absente : migrations non appliquées).
+
+Les logs Koko ne contiennent jamais de données de santé, de corps de requête, de jeton ni d'adresse IP.
+
+**4. Codes fréquents :**
+- `PG_42P05` / `PG_26000` (« prepared statement ») : URL du pooler Supabase (port 6543) sans `pgbouncer=true`. Depuis cette version, Koko l'ajoute automatiquement. Si l'erreur persiste, vérifiez que le déploiement contient bien ce correctif.
+- `P2021` / `P2022` (table ou colonne absente) : lancez `npm run db:deploy` sur la production (voir l'étape 4 de l'installation).
+- `PrismaClientInitializationError` : URL de base invalide ou base injoignable. Vérifiez les variables ci-dessous.
+
+**5. Variables à vérifier sur Vercel** (Settings > Environment Variables, environnement *Production*) :
+- obligatoires : `IDENTITY_DATABASE_URL`, `HEALTH_DATABASE_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `ENCRYPTION_KEY`, `CRON_SECRET` ;
+- conseillée : `APP_URL` (https://koko-tg.vercel.app) ;
+- optionnelles : `GEMINI_API_KEY`, `INACTIVITY_TIMEOUT_MINUTES`, `WHATSAPP_*` ;
+- migrations seulement, à garder sur votre poste plutôt que sur Vercel : `IDENTITY_DIRECT_URL`, `HEALTH_DIRECT_URL`.
+
+Toute modification de variable demande un **redéploiement** pour être prise en compte.
+
+**6. Revenir à la version précédente.** Vercel > **Deployments**, choisissez le dernier déploiement qui fonctionnait, menu « ⋯ » > **Promote to Production** (ou **Instant Rollback**). Le site revient immédiatement à cette version. Corrigez ensuite le problème, lancez `npm run predeploy`, puis poussez.
 
 ---
 

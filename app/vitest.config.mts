@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     environment: "node",
     globals: true,
+    // Fast tests only. Database tests: npm run test:db; end-to-end: npm run test:e2e
+    include: ["src/**/*.test.{ts,tsx}", "tests/unit/**/*.test.{ts,tsx}"],
+    exclude: ["node_modules/**", "tests/db/**", "tests/e2e/**", ".next/**"],
   },
   resolve: {
     alias: {

@@ -5,6 +5,7 @@ import { HealthCenterMap, MapCenterItem } from "@/components/map/HealthCenterMap
 import { VoucherModal } from "@/components/vouchers/VoucherModal";
 import Link from "next/link";
 import { EMERGENCY_CONTACTS } from "@/lib/constants";
+import { SectionBoundary } from "@/components/errors/SectionBoundary";
 
 export default function PassSantePage() {
   // Only verified centers from the database are ever displayed
@@ -193,13 +194,16 @@ export default function PassSantePage() {
       </div>
 
       {/* Map Section */}
+      <SectionBoundary name="pass-map">
       <HealthCenterMap
         centers={centers}
         selectedCenterId={selectedCenterId}
         onSelectCenter={(id) => setSelectedCenterId(id)}
       />
+      </SectionBoundary>
 
       {/* Health Centers List */}
+      <SectionBoundary name="pass-centers">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
         {centers.map((center) => (
           <div
@@ -287,6 +291,7 @@ export default function PassSantePage() {
           </div>
         ))}
       </div>
+      </SectionBoundary>
       </>
       )}
 

@@ -5,6 +5,7 @@ import { CycleRing } from "@/components/ui/CycleRing";
 import { CycleCalendar } from "@/components/ui/CycleCalendar";
 import { MoodPicker } from "@/components/ui/MoodPicker";
 import { useAppStore } from "@/lib/store";
+import { SectionBoundary } from "@/components/errors/SectionBoundary";
 
 interface CyclePredictionView {
   currentDay: number;
@@ -158,6 +159,7 @@ export default function CarnetIntimePage() {
       </div>
 
       {/* Record a real period start: the only source of predictions */}
+      <SectionBoundary name="carnet-period">
       <form
         onSubmit={handleSavePeriodStart}
         className="rounded-2xl bg-surface-container-lowest p-space-md sm:p-space-lg border border-outline-variant/40 flex flex-col sm:flex-row sm:items-end gap-3"
@@ -191,6 +193,7 @@ export default function CarnetIntimePage() {
           {savingPeriod ? "Enregistrement..." : "Enregistrer la date"}
         </button>
       </form>
+      </SectionBoundary>
 
       {!prediction ? (
         <div className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-space-md sm:p-space-lg md:p-space-xl border border-outline-variant/30 flex flex-col items-center text-center gap-3">
@@ -207,6 +210,7 @@ export default function CarnetIntimePage() {
       ) : (
       <>
       {/* Main Cycle Visual Card with Arch Top */}
+      <SectionBoundary name="carnet-cycle">
       <div className="relative overflow-hidden rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-low p-space-md sm:p-space-lg md:p-space-xl shadow-xs border border-outline-variant/30">
         <div className="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-tertiary-fixed/30 blur-3xl pointer-events-none" />
         <div className="absolute -left-16 -bottom-16 w-72 h-72 rounded-full bg-secondary-fixed/40 blur-3xl pointer-events-none" />
@@ -299,7 +303,9 @@ export default function CarnetIntimePage() {
           </div>
         </div>
       </div>
+      </SectionBoundary>
 
+      <SectionBoundary name="carnet-history">
       <div className={isDiscreetMode ? "discreet-blur" : ""}>
         <CycleCalendar
           lastPeriodStart={lastStart}
@@ -310,6 +316,7 @@ export default function CarnetIntimePage() {
           fertileWindowEnd={prediction.fertileWindowEnd}
         />
       </div>
+      </SectionBoundary>
       <p className="font-body text-body-sm text-on-surface-variant -mt-3">
         Estimation seulement : ce n&apos;est pas une contraception.
       </p>
@@ -317,6 +324,7 @@ export default function CarnetIntimePage() {
       )}
 
       {/* Daily Journal Form Section */}
+      <SectionBoundary name="carnet-journal">
       <section
         id="log-section"
         className="rounded-t-[2.5rem] rounded-b-2xl bg-surface-container-lowest p-space-md sm:p-space-lg md:p-space-xl shadow-xs border border-outline-variant/30 flex flex-col gap-space-md"
@@ -445,8 +453,10 @@ export default function CarnetIntimePage() {
           </div>
         </form>
       </section>
+      </SectionBoundary>
 
       {/* Privacy Toggles & WhatsApp Reminders */}
+      <SectionBoundary name="carnet-settings">
       <div className="rounded-2xl bg-surface-container-low p-space-md sm:p-space-lg shadow-xs border border-outline-variant/30 flex flex-col gap-4">
         <h3 className="font-headline text-headline-sm text-on-surface font-bold flex items-center gap-2">
           <span aria-hidden="true" className="material-symbols-outlined text-secondary text-[22px]">
@@ -487,6 +497,7 @@ export default function CarnetIntimePage() {
           </div>
         </div>
       </div>
+      </SectionBoundary>
     </div>
   );
 }

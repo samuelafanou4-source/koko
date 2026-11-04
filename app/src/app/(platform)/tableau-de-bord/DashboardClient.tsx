@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useSessionUser } from "@/components/auth/SessionProvider";
-import { CycleRing } from "@/components/ui/CycleRing";
 import { MoodPicker } from "@/components/ui/MoodPicker";
+import { SectionBoundary } from "@/components/errors/SectionBoundary";
+import { CycleSnippet, type CyclePrediction } from "./CycleSnippet";
 
 const SPACES = [
   {
@@ -37,23 +37,13 @@ const SPACES = [
   },
 ];
 
-export default function DashboardPage() {
+export default function DashboardPage({
+  loadCycle,
+}: {
+  /** Data source of the cycle card (replaceable in tests). */
+  loadCycle?: () => Promise<CyclePrediction | null>;
+} = {}) {
   const { pseudonym } = useSessionUser();
-  const [prediction, setPrediction] = useState<{
-    currentDay: number;
-    totalCycleLength: number;
-    periodLength: number;
-    phaseLabel: string;
-    phaseSummary: string;
-    daysUntilNextPeriod: number;
-  } | null>(null);
-
-  useEffect(() => {
-    fetch("/api/cycle")
-      .then((res) => res.json())
-      .then((data) => setPrediction(data.prediction ?? null))
-      .catch(() => {});
-  }, []);
 
   return (
     <div className="w-full max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-space-md md:py-space-lg flex flex-col gap-space-lg">
@@ -62,64 +52,25 @@ export default function DashboardPage() {
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-md lg:gap-space-lg items-stretch">
-        <div className="lg:col-span-7 bg-surface-container-lowest rounded-3xl p-space-md sm:p-space-lg border border-outline-variant/40">
-          <MoodPicker
-            onSave={(mood, symptoms) =>
-              fetch("/api/cycle", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ type: "MOOD_LOG", mood, symptoms }),
-              })
-                .then((res) => res.ok)
-                .catch(() => false)
-            }
-          />
-        </div>
+        <SectionBoundary name="dashboard-mood" className="lg:col-span-7">
+          <div className="lg:col-span-7 bg-surface-container-lowest rounded-3xl p-space-md sm:p-space-lg border border-outline-variant/40">
+            <MoodPicker
+              onSave={(mood, symptoms) =>
+                fetch("/api/cycle", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ type: "MOOD_LOG", mood, symptoms }),
+                })
+                  .then((res) => res.ok)
+                  .catch(() => false)
+              }
+            />
+          </div>
+        </SectionBoundary>
 
-        <Link
-          href="/carnet-intime"
-          className="lg:col-span-5 bg-surface-container-low rounded-3xl p-space-md sm:p-space-lg border border-outline-variant/40 flex items-center gap-4 hover:shadow-soft transition-shadow"
-        >
-          {prediction ? (
-            <>
-              <CycleRing
-                currentDay={prediction.currentDay}
-                totalCycleLength={prediction.totalCycleLength}
-                periodLength={prediction.periodLength}
-                phaseLabel={prediction.phaseLabel}
-                size="sm"
-              />
-              <span className="flex flex-col gap-1 min-w-0">
-                <span className="font-label text-label-md text-tertiary">
-                  {prediction.phaseLabel}
-                </span>
-                <span className="font-headline text-headline-sm text-on-surface font-bold">
-                  Règles dans ~{prediction.daysUntilNextPeriod} jours
-                </span>
-                <span className="font-body text-body-sm text-on-surface-variant">
-                  Estimation
-                </span>
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="w-14 h-14 shrink-0 rounded-full bg-tertiary-fixed text-tertiary flex items-center justify-center">
-                <span aria-hidden="true" className="material-symbols-outlined text-[28px]">calendar_month</span>
-              </span>
-              <span className="flex flex-col gap-1">
-                <span className="font-headline text-headline-sm text-on-surface font-bold">
-                  Suivre mon cycle
-                </span>
-                <span className="font-body text-body-md text-on-surface-variant">
-                  Note tes dernières règles.
-                </span>
-              </span>
-            </>
-          )}
-          <span aria-hidden="true" className="material-symbols-outlined text-[22px] text-outline ml-auto">
-            chevron_right
-          </span>
-        </Link>
+        <SectionBoundary name="dashboard-cycle" className="lg:col-span-5">
+          <CycleSnippet load={loadCycle} />
+        </SectionBoundary>
       </div>
 
       <nav aria-label="Mes espaces" className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">

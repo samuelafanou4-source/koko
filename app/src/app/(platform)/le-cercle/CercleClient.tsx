@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSessionUser } from "@/components/auth/SessionProvider";
+import { SectionBoundary } from "@/components/errors/SectionBoundary";
 
 interface ForumPostItem {
   id: string;
@@ -246,6 +247,7 @@ export default function LeCerclePage() {
       </div>
 
       {/* Category Filter Chips */}
+      <SectionBoundary name="cercle-filters">
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
         {categories.map((c) => {
           const isActive = selectedCategory === c.id;
@@ -268,8 +270,10 @@ export default function LeCerclePage() {
           );
         })}
       </div>
+      </SectionBoundary>
 
       {/* Discussions Feed */}
+      <SectionBoundary name="cercle-feed">
       <div className="flex flex-col gap-4">
         {loading ? (
           <div className="py-12 text-center text-on-surface-variant font-body">
@@ -378,6 +382,7 @@ export default function LeCerclePage() {
           ))
         )}
       </div>
+      </SectionBoundary>
 
       {/* Modal: Create Post */}
       {showCreateModal && (

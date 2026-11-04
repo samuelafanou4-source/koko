@@ -37,6 +37,10 @@ export const PUBLIC_API_ROUTES = [
   "/api/whatsapp/reminders",
   // Used by partner health centres, who have no Koko account
   "/api/vouchers/validate",
+  // Post-deploy checks: ok/ko only, never a value (rate limited)
+  "/api/health",
+  // Safe client error reports (section id, digest, error class; rate limited)
+  "/api/client-errors",
 ] as const;
 
 /** Files that are always public (crawlers, PWA). */

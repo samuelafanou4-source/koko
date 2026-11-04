@@ -6,6 +6,7 @@ import { ChatBubble, ChatMessage } from "@/components/chat/ChatBubble";
 import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { takePendingTopicQuestion } from "@/lib/topics";
 import { useSessionUser } from "@/components/auth/SessionProvider";
+import { SectionBoundary } from "@/components/errors/SectionBoundary";
 
 export default function AssistantKokoPage() {
   const { pseudonym } = useSessionUser();
@@ -157,6 +158,7 @@ export default function AssistantKokoPage() {
   return (
     <div className="w-full max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-space-md md:py-space-lg flex flex-col gap-space-lg">
       {/* Ethical & Safety Disclaimer Banner */}
+      <SectionBoundary name="assistant-notice">
       <div className="w-full bg-secondary-container/40 text-on-secondary-container rounded-2xl p-space-md flex items-start sm:items-center gap-3 shadow-xs border border-secondary/20">
         <span aria-hidden="true"
           className="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5 sm:mt-0"
@@ -171,10 +173,12 @@ export default function AssistantKokoPage() {
           </p>
         </div>
       </div>
+      </SectionBoundary>
 
       {/* Main Sanctuary Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
         {/* Left: Chat Column (8 cols) */}
+        <SectionBoundary name="assistant-chat">
         <section className="lg:col-span-8 flex flex-col bg-surface-container-low rounded-t-[2.5rem] rounded-b-2xl shadow-xs border border-outline-variant/30 overflow-hidden min-h-[640px] relative">
           {/* Header */}
           <header className="bg-surface-container-lowest px-space-md md:px-space-lg py-space-md flex items-center justify-between shadow-[0_2px_12px_rgba(0,0,0,0.03)] border-b border-outline-variant/20 z-10">
@@ -301,8 +305,10 @@ export default function AssistantKokoPage() {
             </div>
           </div>
         </section>
+        </SectionBoundary>
 
         {/* Right Sidebar (4 cols) */}
+        <SectionBoundary name="assistant-sidebar">
         <aside className="lg:col-span-4 flex flex-col gap-space-md">
           {/* Need human help card */}
           <div className="rounded-t-[2.5rem] rounded-b-2xl bg-tertiary-fixed/30 p-6 border border-tertiary/20 flex flex-col gap-3">
@@ -362,6 +368,7 @@ export default function AssistantKokoPage() {
             </ul>
           </div>
         </aside>
+        </SectionBoundary>
       </div>
     </div>
   );
