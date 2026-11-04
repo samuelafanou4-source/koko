@@ -4,15 +4,17 @@ import { useCallback, useEffect } from "react";
 import { PLATFORM_CONFIG } from "@/lib/constants";
 import { useAppStore } from "@/lib/store";
 
-export function EscapeButton() {
-  const { clearLocalTraces } = useAppStore();
-
-  const triggerEscape = useCallback(() => {
-    // Clear in-memory / storage traces quickly and redirect immediately
+/** Clears local traces and leaves Koko for a neutral site at once. */
+function useTriggerEscape() {
+  const clearLocalTraces = useAppStore((state) => state.clearLocalTraces);
+  return useCallback(() => {
     clearLocalTraces();
     window.location.replace(PLATFORM_CONFIG.safeExitUrl);
   }, [clearLocalTraces]);
+}
 
+/** Double press on Échap triggers the quick exit. */
+function useEscapeShortcut(triggerEscape: () => void) {
   useEffect(() => {
     // Double press so that closing a dialog with Échap never ejects her by accident
     let lastEscape = 0;
@@ -28,6 +30,21 @@ export function EscapeButton() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [triggerEscape]);
+}
+
+/**
+ * Invisible quick exit: only the double-Échap shortcut, no button.
+ * Used on the public pages, whose header has no "Sortie rapide" button.
+ */
+export function QuickExitShortcut() {
+  useEscapeShortcut(useTriggerEscape());
+  return null;
+}
+
+/** Visible "Sortie rapide" button (platform header), shortcut included. */
+export function EscapeButton() {
+  const triggerEscape = useTriggerEscape();
+  useEscapeShortcut(triggerEscape);
 
   return (
     <button
@@ -42,4 +59,3 @@ export function EscapeButton() {
     </button>
   );
 }
-

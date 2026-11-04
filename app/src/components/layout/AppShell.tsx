@@ -33,13 +33,15 @@ export function AppShell(props: AppShellProps) {
   const isPlatform = props.variant === "platform";
 
   useEffect(() => {
+    // Hint about the eye button: platform only (the public header has none)
+    if (!isPlatform) return;
     // Show quick exit hint briefly on first load
     const dismissed = sessionStorage.getItem("koko_hint_dismissed");
     if (!dismissed) {
       const timer = setTimeout(() => setShowHelper(true), 1500);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isPlatform]);
 
   useEffect(() => {
     try {
@@ -82,7 +84,7 @@ export function AppShell(props: AppShellProps) {
       {showHelper && (
         <aside
           aria-label="Astuce discrétion"
-          className={`fixed ${isPlatform ? "bottom-20" : "bottom-4"} md:bottom-6 left-4 right-4 md:left-auto z-40 md:max-w-xs animate-slideUp`}
+          className={`fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto z-40 md:max-w-xs animate-slideUp`}
         >
           <div className="bg-surface-container-lowest p-3 pl-4 rounded-2xl shadow-soft border border-outline-variant/50 flex items-center gap-3">
             <span aria-hidden="true" className="material-symbols-outlined text-[22px] text-primary">

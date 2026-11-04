@@ -1,10 +1,19 @@
 import Link from "next/link";
 
-/** Arch logo + "Koko" wordmark. */
-export function Brand({ href }: { href: string }) {
+/**
+ * Arch logo + "Koko" wordmark.
+ * `compact`: smaller on phones, wordmark hidden under 340px (tiny screens),
+ * so that two text buttons fit next to it.
+ */
+export function Brand({ href, compact = false }: { href: string; compact?: boolean }) {
   return (
-    <Link href={href} prefetch={false} className="flex items-center gap-2.5 group" aria-label="Koko, accueil">
-      <div className="w-9 h-9 rounded-full bg-primary-fixed/40 flex items-center justify-center p-1.5 transition-transform group-hover:scale-105">
+    <Link
+      href={href}
+      prefetch={false}
+      className={`flex items-center group shrink-0 ${compact ? "gap-2 sm:gap-2.5" : "gap-2.5"}`}
+      aria-label="Koko, accueil"
+    >
+      <div className={`${compact ? "w-8 h-8 sm:w-9 sm:h-9" : "w-9 h-9"} rounded-full bg-primary-fixed/40 flex items-center justify-center p-1.5 transition-transform group-hover:scale-105`}>
         <svg aria-hidden="true" viewBox="0 0 100 120" className="w-full h-full text-primary" fill="none">
           <path
             d="M15 110V50C15 30.67 30.67 15 50 15C69.33 15 85 30.67 85 50V110"
@@ -15,7 +24,11 @@ export function Brand({ href }: { href: string }) {
           <circle cx="62" cy="72" r="6" fill="#d98e73" />
         </svg>
       </div>
-      <span className="font-headline text-headline-sm text-primary tracking-tight font-bold">
+      <span
+        className={`font-headline text-headline-sm text-primary tracking-tight font-bold ${
+          compact ? "max-[339px]:hidden" : ""
+        }`}
+      >
         Koko
       </span>
     </Link>
