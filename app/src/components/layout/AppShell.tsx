@@ -5,12 +5,32 @@ import { Navbar } from "./Navbar";
 import { BottomNav } from "./BottomNav";
 import { Footer } from "./Footer";
 import { DiscreetVeil } from "@/components/ui/DiscreetVeil";
-import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
+import { SessionGuard } from "@/components/auth/SessionGuard";
+import { useSessionUser } from "@/components/auth/SessionProvider";
 import { useAppStore } from "@/lib/store";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+type AppShellProps =
+  | { variant: "public"; header: React.ReactNode; children: React.ReactNode }
+  | {
+      variant: "platform";
+      inactivityTimeoutMinutes: number;
+      children: React.ReactNode;
+    };
+
+/** Keeps the zustand user in sync with the server-verified session. */
+function PlatformStoreSync() {
+  const { pseudonym, role } = useSessionUser();
+  const setUser = useAppStore((state) => state.setUser);
+  useEffect(() => {
+    setUser({ pseudonym, role, isAuthenticated: true });
+  }, [pseudonym, role, setUser]);
+  return null;
+}
+
+export function AppShell(props: AppShellProps) {
   const [showHelper, setShowHelper] = useState(false);
-  const { setUser, setDiscreetMode } = useAppStore();
+  const setDiscreetMode = useAppStore((state) => state.setDiscreetMode);
+  const isPlatform = props.variant === "platform";
 
   useEffect(() => {
     // Show quick exit hint briefly on first load
@@ -29,22 +49,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     }
   }, [setDiscreetMode]);
 
-  useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data && data.user) {
-          setUser({
-            pseudonym: data.user.pseudonym,
-            anonId: data.user.anonId,
-            role: data.user.role,
-            isAuthenticated: true,
-          });
-        }
-      })
-      .catch(() => {});
-  }, [setUser]);
-
   const dismissHelper = () => {
     setShowHelper(false);
     sessionStorage.setItem("koko_hint_dismissed", "true");
@@ -52,22 +56,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <ServiceWorkerRegister />
-      <Navbar />
+      {props.variant === "platform" ? (
+        <>
+          <PlatformStoreSync />
+          <SessionGuard timeoutMinutes={props.inactivityTimeoutMinutes} />
+          <Navbar />
+        </>
+      ) : (
+        props.header
+      )}
 
-      <main className="w-full pt-16 md:pt-[7.5rem] lg:pt-20 bg-surface min-h-[calc(100vh-140px)] flex flex-col flex-1">
-        {children}
+      <main
+        className={`w-full pt-16 bg-surface min-h-[calc(100vh-140px)] flex flex-col flex-1 ${
+          isPlatform ? "md:pt-[7.5rem] lg:pt-20" : "md:pt-20"
+        }`}
+      >
+        {props.children}
       </main>
 
-      <Footer />
-      <BottomNav />
+      <Footer withBottomNav={isPlatform} />
+      {isPlatform && <BottomNav />}
       <DiscreetVeil />
 
       {/* One-time hint about the quick exit button */}
       {showHelper && (
         <aside
           aria-label="Astuce discrétion"
-          className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto z-40 md:max-w-xs animate-slideUp"
+          className={`fixed ${isPlatform ? "bottom-20" : "bottom-4"} md:bottom-6 left-4 right-4 md:left-auto z-40 md:max-w-xs animate-slideUp`}
         >
           <div className="bg-surface-container-lowest p-3 pl-4 rounded-2xl shadow-soft border border-outline-variant/50 flex items-center gap-3">
             <span aria-hidden="true" className="material-symbols-outlined text-[22px] text-primary">
@@ -90,4 +105,3 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </>
   );
 }
-

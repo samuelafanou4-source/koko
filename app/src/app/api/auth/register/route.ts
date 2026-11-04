@@ -2,15 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import crypto from "crypto";
 import { identityDb } from "@/lib/db/identity";
+import { hashPassword, startSession } from "@/lib/auth";
 import {
-  hashPassword,
-  createAccessToken,
-  createRefreshToken,
-  setAuthCookies,
-  persistSession,
-} from "@/lib/auth";
-import { authLimiter, checkRateLimit } from "@/lib/rate-limit";
-import { getRateLimitSubject } from "@/lib/rate-subject";
+  TOO_MANY_ATTEMPTS_MESSAGE,
+  consume,
+  getClientKey,
+  registerClientLimiter,
+} from "@/lib/login-guard";
+import { PRIVATE_CACHE_HEADERS } from "@/lib/session";
 import { isValidPseudonym } from "@/lib/pseudonyms";
 import { EncryptionService } from "@/lib/crypto";
 import { logServerError } from "@/lib/logger";
@@ -22,12 +21,12 @@ const registerSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  // Rate limiting check
-  const rateLimit = await checkRateLimit(authLimiter, await getRateLimitSubject());
-  if (!rateLimit.allowed) {
+  // Strict per-client limit: sign-up also tells whether a pseudonym is taken,
+  // so it must not be usable to enumerate pseudonyms in bulk
+  if (!(await consume(registerClientLimiter, await getClientKey()))) {
     return NextResponse.json(
-      { error: "Trop de tentatives. Merci de patienter quelques instants." },
-      { status: 429 }
+      { error: TOO_MANY_ATTEMPTS_MESSAGE },
+      { status: 429, headers: PRIVATE_CACHE_HEADERS }
     );
   }
 
@@ -83,20 +82,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create session tokens
-    const accessToken = await createAccessToken({
-      userId: account.id,
-      anonId: account.anonId,
-      pseudonym: account.pseudonym,
-      role: account.role,
-    });
-
-    const refreshToken = await createRefreshToken(account.id, account.anonId);
-
-    // Store session record
-    await persistSession(account.id, refreshToken);
-
-    await setAuthCookies(accessToken, refreshToken);
+    // Logged in right away
+    await startSession(account);
 
     return NextResponse.json({
       success: true,
@@ -105,8 +92,15 @@ export async function POST(req: NextRequest) {
         anonId: account.anonId,
         role: account.role,
       },
-    });
-  } catch {
+    }, { headers: PRIVATE_CACHE_HEADERS });
+  } catch (error) {
+    // Two sign-ups racing for the same pseudonym: unique constraint
+    if ((error as { code?: string })?.code === "P2002") {
+      return NextResponse.json(
+        { error: "Ce pseudonyme est déjà emprunté. Choisis-en un autre avec douceur." },
+        { status: 409 }
+      );
+    }
     logServerError("auth.register");
     return NextResponse.json(
       { error: "Une erreur est survenue lors de la création de ton espace." },

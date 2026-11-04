@@ -18,6 +18,51 @@ Koko intègre une séparation physique et logique stricte :
 
 ---
 
+## 🔐 Modèle d'accès : une plateforme sous pseudo
+
+Toutes les fonctionnalités demandent d'être connectée avec son pseudo. Seules quelques pages restent publiques.
+
+**Pages publiques** : `/` (présentation), `/onboarding` (création d'espace), `/connexion`, `/charte`, `/sos-ecoute`, `/offline`.
+La page SOS et le bouton SOS restent accessibles sans compte : une personne en détresse doit joindre les numéros d'urgence en un geste.
+
+**Pages privées** : `/tableau-de-bord`, `/assistant-koko`, `/carnet-intime`, `/le-cercle`, `/pass-sante`, `/parametres`, `/moderation` (modératrices et admins uniquement).
+Toute autre adresse est privée par défaut (liste blanche des routes publiques dans `src/lib/routes.ts`).
+
+**API publiques** : `/api/auth/login`, `register`, `refresh`, `logout`, `me`, `pseudonyms`, ainsi que `/api/sos`, `/api/whatsapp/*` (protégées par leurs propres secrets) et `/api/vouchers/validate` (utilisée par les centres partenaires).
+Toutes les autres API sont privées et répondent `401` sans session.
+
+**Contrôle en profondeur** :
+1. `src/proxy.ts` (le « middleware » de Next.js 16) fait un contrôle léger : cookie présent et signature JWT valide. Il redirige vers `/connexion?next=…` (pages) ou répond `401` (API).
+2. Les vérifications serveur passent par `src/lib/session.ts` : `requireSession()` dans le layout `(platform)` et dans chaque page privée, `withSession()` dans chaque route API privée. Elles vérifient le JWT **et** la session en base, donc une déconnexion révoque immédiatement les jetons.
+3. Le paramètre `next` est validé (`src/lib/safe-next.ts`) : seuls les chemins internes relatifs vers une page privée sont acceptés.
+
+**Session** :
+- cookies `httpOnly`, `secure` en production, `sameSite=lax` ;
+- jeton d'accès de 15 minutes et jeton de renouvellement de 7 jours, avec rotation à chaque renouvellement (l'ancien reste valable 60 s pour les requêtes parallèles) ;
+- une session expirée renvoie vers `/connexion` avec le message « Ta session a expiré, reconnecte-toi » ;
+- déconnexion automatique après `INACTIVITY_TIMEOUT_MINUTES` minutes sans activité (15 par défaut). Ce délai s'ajoute au voile anti-regards.
+
+Pourquoi `sameSite=lax` et pas `strict` : avec `strict`, ouvrir Koko depuis un lien WhatsApp perdait la session.
+
+**Connexion** :
+- limite par client (empreinte réseau hachée, gardée en mémoire, jamais journalisée) et par pseudo (5 échecs / 15 min) ;
+- message unique « Pseudo ou mot de passe incorrect » et délai constant en cas d'échec ;
+- la création d'espace est limitée à 10 essais par heure et par client.
+
+**Pas de récupération du mot de passe** : Koko ne connaît ni numéro ni e-mail. En cas d'oubli, il faut créer un nouvel espace.
+
+**Cache et PWA** :
+- toutes les réponses privées portent `Cache-Control: private, no-store` ;
+- le service worker (`public/sw.js`, cache `koko-static-v3`) ne met jamais en cache les pages ni `/api`. Hors ligne, il affiche toujours `/offline` ;
+- l'application installée s'ouvre sur `/tableau-de-bord` ;
+- à la déconnexion, le stockage local, le Cache Storage et l'état en mémoire sont vidés.
+
+**Sujets de la page d'accueil** : seule une clé courte (ex. `pilule-oubli`) est gardée en `sessionStorage`, jamais la question dans l'URL. Après connexion, l'assistant s'ouvre avec la question préremplie depuis `src/lib/topics.ts`.
+
+**Indexation** : seules `/` et `/charte` sont dans le sitemap. Les pages privées, `/connexion` et `/onboarding` sont en `noindex`.
+
+---
+
 ## 🚀 Guide d'installation rapide
 
 ### 1. Prérequis
@@ -46,6 +91,7 @@ Renseignez ensuite vos deux URLs de base de données et votre clé API optionnel
 - `IDENTITY_DATABASE_URL` : URL PostgreSQL de la base identité (ex: `postgresql://postgres:password@localhost:5432/koko_identity?schema=public`)
 - `HEALTH_DATABASE_URL` : URL PostgreSQL de la base santé (ex: `postgresql://postgres:password@localhost:5432/koko_health?schema=public`)
 - `GEMINI_API_KEY` : Clé API Google AI Studio pour l'Assistant Koko (si absente, un mode secours chaleureux prend le relais automatiquement).
+- `INACTIVITY_TIMEOUT_MINUTES` (optionnel) : minutes sans activité avant la déconnexion automatique (défaut `15`, de 1 à 1440).
 
 ### 4. Génération et migration des deux schémas Prisma
 Koko sépare strictement les modèles identité et santé :

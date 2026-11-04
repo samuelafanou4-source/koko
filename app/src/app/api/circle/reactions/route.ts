@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { logServerError } from "@/lib/logger";
 
@@ -9,14 +9,7 @@ const reactionSchema = z.object({
   reactionType: z.enum(["HUG", "ME_TOO", "REPORT"]),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Connecte-toi pour réagir." },
-      { status: 401 }
-    );
-  }
+export const POST = withSession(async (req: NextRequest, user) => {
 
   try {
     const body = await req.json();
@@ -94,5 +87,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 

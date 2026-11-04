@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { identityDb } from "@/lib/db/identity";
 import { forumLimiter, checkRateLimit } from "@/lib/rate-limit";
@@ -10,7 +10,7 @@ const getPostsSchema = z.object({
   category: z.string().max(50).optional(),
 });
 
-export async function GET(req: NextRequest) {
+export const GET = withSession(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const parsed = getPostsSchema.safeParse({
     category: searchParams.get("category") ?? undefined,
@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 
 const createPostSchema = z.object({
   title: z.string().min(4).max(120),
@@ -74,14 +74,7 @@ const createPostSchema = z.object({
   content: z.string().min(10).max(3000),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Connecte-toi avec ton pseudonyme pour participer au Cercle." },
-      { status: 401 }
-    );
-  }
+export const POST = withSession(async (req: NextRequest, user) => {
 
   // Rate limit
   const rateLimit = await checkRateLimit(forumLimiter, user.anonId);
@@ -132,5 +125,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 

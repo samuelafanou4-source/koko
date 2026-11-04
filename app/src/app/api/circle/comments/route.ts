@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { identityDb } from "@/lib/db/identity";
 import { logServerError } from "@/lib/logger";
@@ -9,7 +9,7 @@ const getCommentsSchema = z.object({
   postId: z.string().min(1),
 });
 
-export async function GET(req: NextRequest) {
+export const GET = withSession(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const parsed = getCommentsSchema.safeParse({
     postId: searchParams.get("postId") ?? "",
@@ -51,21 +51,14 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 
 const addCommentSchema = z.object({
   postId: z.string().min(1),
   content: z.string().min(2).max(1000),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Connecte-toi pour répondre." },
-      { status: 401 }
-    );
-  }
+export const POST = withSession(async (req: NextRequest, user) => {
 
   try {
     const body = await req.json();
@@ -101,5 +94,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 

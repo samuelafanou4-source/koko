@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { EncryptionService } from "@/lib/crypto";
 import { assistantLimiter, checkRateLimit } from "@/lib/rate-limit";
@@ -22,9 +22,8 @@ const assistantSchema = z.object({
     .default([]),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  const rateLimitKey = await getRateLimitSubject(user?.anonId);
+export const POST = withSession(async (req: NextRequest, user) => {
+  const rateLimitKey = await getRateLimitSubject(user.anonId);
 
   // Rate limiting
   const rateCheck = await checkRateLimit(assistantLimiter, rateLimitKey);
@@ -144,5 +143,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 

@@ -1,17 +1,11 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser, clearAuthCookies } from "@/lib/auth";
+import { clearAuthCookies } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { identityDb } from "@/lib/db/identity";
 import { healthDb } from "@/lib/db/health";
 import { logServerError } from "@/lib/logger";
 
-export async function DELETE() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Session non authentifiée." },
-      { status: 401 }
-    );
-  }
+export const DELETE = withSession(async (_req, user) => {
 
   try {
     const { anonId, userId } = user;
@@ -48,5 +42,5 @@ export async function DELETE() {
       { status: 500 }
     );
   }
-}
+});
 

@@ -62,6 +62,33 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
+      {
+        // The browser must always check for a new service worker
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+      // Private pages and APIs also get no-store from the proxy and from
+      // withSession(); this is a third layer in case either is bypassed.
+      ...[
+        "/api/:path*",
+        "/tableau-de-bord/:path*",
+        "/assistant-koko/:path*",
+        "/carnet-intime/:path*",
+        "/le-cercle/:path*",
+        "/pass-sante/:path*",
+        "/parametres/:path*",
+        "/moderation/:path*",
+      ].map((source) => ({
+        source,
+        headers: [
+          { key: "Cache-Control", value: "private, no-store, max-age=0, must-revalidate" },
+          { key: "Vary", value: "Cookie" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      })),
     ];
   },
 };

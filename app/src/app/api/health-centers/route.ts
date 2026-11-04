@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { healthDb } from "@/lib/db/health";
 import { sortNearestFirst } from "@/lib/haversine";
 import { logServerError } from "@/lib/logger";
+import { withSession } from "@/lib/session";
 
 const querySchema = z.object({
   lat: z.coerce.number().min(-90).max(90).optional(),
@@ -10,7 +11,8 @@ const querySchema = z.object({
   city: z.string().max(100).optional(),
 });
 
-export async function GET(req: NextRequest) {
+// Private: her position (lat/lng) is sensitive and only Pass Santé uses this
+export const GET = withSession(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const parsed = querySchema.safeParse({
     lat: searchParams.get("lat") ?? undefined,
@@ -47,5 +49,5 @@ export async function GET(req: NextRequest) {
     logServerError("health-centers.get");
     return NextResponse.json({ centers: [] });
   }
-}
+});
 

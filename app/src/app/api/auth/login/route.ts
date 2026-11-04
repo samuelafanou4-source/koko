@@ -1,90 +1,88 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { identityDb } from "@/lib/db/identity";
+import { verifyPassword, startSession } from "@/lib/auth";
 import {
-  verifyPassword,
-  createAccessToken,
-  createRefreshToken,
-  setAuthCookies,
-  persistSession,
-} from "@/lib/auth";
-import { authLimiter, checkRateLimit } from "@/lib/rate-limit";
-import { getRateLimitSubject } from "@/lib/rate-subject";
+  LOGIN_FAILURE_MESSAGE,
+  TOO_MANY_ATTEMPTS_MESSAGE,
+  consume,
+  delayFailure,
+  getClientKey,
+  getDummyHash,
+  isBlocked,
+  loginClientLimiter,
+  loginPseudonymLimiter,
+  pseudonymKey,
+} from "@/lib/login-guard";
+import { PRIVATE_CACHE_HEADERS } from "@/lib/session";
 import { logServerError } from "@/lib/logger";
 
 const loginSchema = z.object({
-  pseudonym: z.string().min(1),
-  password: z.string().min(1),
+  pseudonym: z.string().trim().min(1).max(60),
+  password: z.string().min(1).max(200),
 });
 
+function json(body: unknown, status = 200) {
+  return NextResponse.json(body, { status, headers: PRIVATE_CACHE_HEADERS });
+}
+
 export async function POST(req: NextRequest) {
-  const rateLimit = await checkRateLimit(authLimiter, await getRateLimitSubject());
-  if (!rateLimit.allowed) {
-    return NextResponse.json(
-      { error: "Trop de tentatives. Merci de patienter quelques instants." },
-      { status: 429 }
-    );
+  const startedAt = Date.now();
+
+  if (!(await consume(loginClientLimiter, await getClientKey()))) {
+    return json({ error: TOO_MANY_ATTEMPTS_MESSAGE }, 429);
+  }
+
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    body = null;
+  }
+  const parsed = loginSchema.safeParse(body);
+  if (!parsed.success) {
+    return json({ error: "Pseudo et mot de passe requis." }, 400);
+  }
+
+  const { pseudonym, password } = parsed.data;
+  const pseudoKey = pseudonymKey(pseudonym);
+
+  // Same answer whether the pseudonym exists or not
+  if (await isBlocked(loginPseudonymLimiter, pseudoKey)) {
+    await delayFailure(startedAt);
+    return json({ error: TOO_MANY_ATTEMPTS_MESSAGE }, 429);
   }
 
   try {
-    const body = await req.json();
-    const parsed = loginSchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Pseudonyme et mot de passe requis." },
-        { status: 400 }
-      );
-    }
-
-    const { pseudonym, password } = parsed.data;
-
     const account = await identityDb.userAccount.findUnique({
       where: { pseudonym },
     });
 
-    if (!account) {
-      return NextResponse.json(
-        { error: "Pseudonyme ou mot de passe incorrect." },
-        { status: 401 }
-      );
+    // Always run argon2 so that timing does not reveal unknown pseudonyms
+    const passwordOk = await verifyPassword(
+      account?.passwordHash ?? (await getDummyHash()),
+      password
+    );
+
+    if (!account || !passwordOk) {
+      await consume(loginPseudonymLimiter, pseudoKey);
+      await delayFailure(startedAt);
+      return json({ error: LOGIN_FAILURE_MESSAGE }, 401);
     }
 
-    const validPassword = await verifyPassword(account.passwordHash, password);
-    if (!validPassword) {
-      return NextResponse.json(
-        { error: "Pseudonyme ou mot de passe incorrect." },
-        { status: 401 }
-      );
-    }
+    await loginPseudonymLimiter.delete(pseudoKey);
+    const session = await startSession(account);
 
-    const accessToken = await createAccessToken({
-      userId: account.id,
-      anonId: account.anonId,
-      pseudonym: account.pseudonym,
-      role: account.role,
-    });
-
-    const refreshToken = await createRefreshToken(account.id, account.anonId);
-
-    // Save active session
-    await persistSession(account.id, refreshToken);
-
-    await setAuthCookies(accessToken, refreshToken);
-
-    return NextResponse.json({
+    return json({
       success: true,
       user: {
-        pseudonym: account.pseudonym,
-        anonId: account.anonId,
-        role: account.role,
+        pseudonym: session.pseudonym,
+        anonId: session.anonId,
+        role: session.role,
       },
     });
   } catch {
     logServerError("auth.login");
-    return NextResponse.json(
-      { error: "Erreur lors de la connexion." },
-      { status: 500 }
-    );
+    return json({ error: "Erreur lors de la connexion. Réessaie dans un instant." }, 500);
   }
 }
-

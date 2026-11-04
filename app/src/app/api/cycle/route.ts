@@ -1,22 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { EncryptionService } from "@/lib/crypto";
 import { calculateAverages, predictCycle } from "@/lib/cycle";
 import { logServerError } from "@/lib/logger";
 
-export async function GET() {
-  const user = await getCurrentUser();
-  if (!user) {
-    // Never show an invented prediction: no data, no forecast
-    return NextResponse.json({
-      authenticated: false,
-      prediction: null,
-      cycles: [],
-      recentLogs: [],
-    });
-  }
+export const GET = withSession(async (_req, user) => {
 
   try {
     const anonId = user.anonId;
@@ -72,7 +62,7 @@ export async function GET() {
       { status: 500 }
     );
   }
-}
+});
 
 const cyclePostSchema = z.object({
   type: z.enum(["CYCLE_START", "CYCLE_LOG", "MOOD_LOG"]),
@@ -85,14 +75,7 @@ const cyclePostSchema = z.object({
   note: z.string().max(2000).optional(),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json(
-      { error: "Connecte-toi pour enregistrer tes données dans ton carnet chiffré." },
-      { status: 401 }
-    );
-  }
+export const POST = withSession(async (req: NextRequest, user) => {
 
   try {
     const body = await req.json();
@@ -176,5 +159,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 

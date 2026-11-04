@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Quicksand, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import { AppShell } from "@/components/layout/AppShell";
+import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -18,6 +18,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.APP_URL || "https://koko-tg.vercel.app"),
   title: "Koko — Espace bien-être intime & confidentiel",
   description:
     "Sanctuaire d'écoute active, de suivi de cycle et d'orientation médicale pour les jeunes femmes et étudiantes au Togo. 100% anonyme, gratuit et bienveillant.",
@@ -47,7 +48,9 @@ export default function RootLayout({
       className={`${quicksand.variable} ${plusJakartaSans.variable}`}
     >
       <body className="bg-surface text-on-surface antialiased min-h-screen flex flex-col font-body">
-        <AppShell>{children}</AppShell>
+        <ServiceWorkerRegister />
+        {/* Public and platform shells live in the (public) and (platform) route groups */}
+        {children}
       </body>
     </html>
   );

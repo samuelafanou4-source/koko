@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import crypto from "crypto";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { logServerError } from "@/lib/logger";
 
@@ -9,9 +9,8 @@ const createVoucherSchema = z.object({
   healthCenterId: z.string().min(1),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  const anonId = user?.anonId || `guest_${crypto.randomBytes(8).toString("hex")}`;
+export const POST = withSession(async (req: NextRequest, user) => {
+  const anonId = user.anonId;
 
   try {
     const body = await req.json();
@@ -81,5 +80,5 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});
 

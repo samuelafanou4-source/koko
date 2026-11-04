@@ -1,19 +1,24 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
+import { getApiSession, PRIVATE_CACHE_HEADERS } from "@/lib/session";
 
 export async function GET() {
-  const user = await getCurrentUser();
+  const user = await getApiSession();
   if (!user) {
-    return NextResponse.json({ authenticated: false, user: null });
+    return NextResponse.json(
+      { authenticated: false, user: null },
+      { headers: PRIVATE_CACHE_HEADERS }
+    );
   }
 
-  return NextResponse.json({
-    authenticated: true,
-    user: {
-      pseudonym: user.pseudonym,
-      anonId: user.anonId,
-      role: user.role,
+  return NextResponse.json(
+    {
+      authenticated: true,
+      user: {
+        pseudonym: user.pseudonym,
+        anonId: user.anonId,
+        role: user.role,
+      },
     },
-  });
+    { headers: PRIVATE_CACHE_HEADERS }
+  );
 }
-

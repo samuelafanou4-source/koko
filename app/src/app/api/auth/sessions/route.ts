@@ -1,17 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { identityDb } from "@/lib/db/identity";
 
 const deleteSessionSchema = z.object({
   id: z.string().optional(),
 });
 
-export async function GET() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Session non authentifiée." }, { status: 401 });
-  }
+export const GET = withSession(async (_req, user) => {
 
   const sessions = await identityDb.session.findMany({
     where: { userId: user.userId },
@@ -20,13 +16,9 @@ export async function GET() {
   });
 
   return NextResponse.json({ sessions });
-}
+});
 
-export async function DELETE(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Session non authentifiée." }, { status: 401 });
-  }
+export const DELETE = withSession(async (req: NextRequest, user) => {
 
   const { searchParams } = new URL(req.url);
   const parsed = deleteSessionSchema.safeParse({
@@ -48,4 +40,4 @@ export async function DELETE(req: NextRequest) {
   }
 
   return NextResponse.json({ success: true });
-}
+});

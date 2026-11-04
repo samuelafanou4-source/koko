@@ -1,18 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentUser } from "@/lib/auth";
+import { withSession } from "@/lib/session";
 import { healthDb } from "@/lib/db/health";
 import { identityDb } from "@/lib/db/identity";
 
-function isModerator(role: string) {
-  return role === "MODERATOR" || role === "ADMIN";
-}
+// Role check stays: only moderators and admins
+const STAFF = { roles: ["MODERATOR", "ADMIN"] };
 
-export async function GET() {
-  const user = await getCurrentUser();
-  if (!user || !isModerator(user.role)) {
-    return NextResponse.json({ error: "Accès réservé à la modération." }, { status: 403 });
-  }
+export const GET = withSession(async () => {
 
   const posts = await healthDb.forumPost.findMany({
     where: { status: { in: ["PENDING", "REJECTED"] } },
@@ -33,18 +28,14 @@ export async function GET() {
       authorPseudonym: authorMap.get(p.anonId) || "SœurBienveillante",
     })),
   });
-}
+}, STAFF);
 
 const moderateSchema = z.object({
   postId: z.string().min(1),
   action: z.enum(["APPROVE", "REJECT"]),
 });
 
-export async function POST(req: NextRequest) {
-  const user = await getCurrentUser();
-  if (!user || !isModerator(user.role)) {
-    return NextResponse.json({ error: "Accès réservé à la modération." }, { status: 403 });
-  }
+export const POST = withSession(async (req: NextRequest) => {
 
   const parsed = moderateSchema.safeParse(await req.json());
   if (!parsed.success) {
@@ -58,4 +49,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ success: true, status });
-}
+}, STAFF);

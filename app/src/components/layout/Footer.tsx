@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAppStore } from "@/lib/store";
 
-export function Footer() {
+export function Footer({ withBottomNav = false }: { withBottomNav?: boolean }) {
   const { clearLocalTraces } = useAppStore();
   const [clearedToast, setClearedToast] = useState(false);
 
@@ -15,7 +15,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="w-full bg-surface-container-low py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-t border-outline-variant/20 mt-auto pb-20 md:pb-space-lg">
+    <footer className={`w-full bg-surface-container-low py-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-t border-outline-variant/20 mt-auto ${withBottomNav ? "pb-20" : ""} md:pb-space-lg`}>
       <div className="max-w-[1120px] mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop flex flex-col items-center justify-center text-center gap-space-xs">
         <p className="flex items-center gap-1.5 text-on-surface-variant font-label text-label-md">
           <span aria-hidden="true" className="material-symbols-outlined text-[16px] text-primary">shield</span>

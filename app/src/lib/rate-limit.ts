@@ -1,11 +1,7 @@
 import "server-only";
 import { RateLimiterMemory } from "rate-limiter-flexible";
 
-// Auth routes: max 10 attempts per minute per key
-export const authLimiter = new RateLimiterMemory({
-  points: 10,
-  duration: 60,
-});
+// Login and sign-up limits live in login-guard.ts
 
 // Assistant routes: max 25 queries per minute per anonId
 export const assistantLimiter = new RateLimiterMemory({
