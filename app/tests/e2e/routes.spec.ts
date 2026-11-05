@@ -19,6 +19,44 @@ const DESTRUCTIVE = new Set(["DELETE /api/auth/delete-data", "DELETE /api/auth/s
 const STAFF_ONLY = new Set(["/moderation"]);
 
 test.describe("logged out", () => {
+  // Icons, manifest and link preview: public, never sent to /connexion
+  for (const [url, type] of [
+    ["/favicon.ico", "image/x-icon"],
+    ["/icon.svg", "image/svg+xml"],
+    ["/icon.png", "image/png"],
+    ["/apple-icon.png", "image/png"],
+    ["/opengraph-image.png", "image/png"],
+    ["/twitter-image.png", "image/png"],
+    ["/manifest.json", "application/json"],
+    ["/icons/icon-192.png", "image/png"],
+    ["/icons/icon-512.png", "image/png"],
+    ["/icons/maskable-192.png", "image/png"],
+    ["/icons/maskable-512.png", "image/png"],
+    ["/icons/monochrome-512.png", "image/png"],
+    ["/brand/koko-logo.svg", "image/svg+xml"],
+  ] as const) {
+    test(`icon ${url}`, async ({ request }) => {
+      const res = await request.get(url, { maxRedirects: 0 });
+      expect(res.status(), url).toBe(200);
+      expect(res.headers()["content-type"], url).toContain(type);
+    });
+  }
+
+  test("the home page links the Koko icons, manifest and preview image", async ({ request }) => {
+    const html = await (await request.get("/")).text();
+    for (const pattern of [
+      /<link rel="icon" href="\/favicon\.ico[^"]*" sizes="48x48"/,
+      /<link rel="icon" href="\/icon\.svg[^"]*" sizes="any" type="image\/svg\+xml"/,
+      /<link rel="apple-touch-icon" href="\/apple-icon\.png[^"]*" sizes="180x180"/,
+      /<link rel="manifest" href="\/manifest\.json"/,
+      /<meta property="og:image" content="[^"]*\/opengraph-image\.png[^"]*"/,
+      /<meta name="twitter:image" content="[^"]*\/twitter-image\.png[^"]*"/,
+      /<meta name="apple-mobile-web-app-title" content="Koko"/,
+    ]) {
+      expect(html).toMatch(pattern);
+    }
+  });
+
   for (const page of pages) {
     test(`page ${page.url}`, async ({ request }) => {
       const res = await request.get(page.url, { maxRedirects: 0 });

@@ -17,6 +17,9 @@ export default defineConfig({
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3100",
     trace: "retain-on-failure",
     locale: "fr-FR",
+    // globals.css scrolls smoothly; while it scrolls, Playwright clicks land
+    // on whatever passes under the pointer (flaky). Reduced motion turns it off.
+    contextOptions: { reducedMotion: "reduce" },
   },
   projects: [
     { name: "mobile-360", use: { ...devices["Pixel 5"], viewport: { width: 360, height: 760 } } },

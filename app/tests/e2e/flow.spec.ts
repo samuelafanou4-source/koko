@@ -35,6 +35,9 @@ test("sign up, browse, log out, log in, delete my data", async ({ page }) => {
     await page.waitForLoadState("networkidle");
     await expectNoErrorScreen(page);
     await expect(page.locator("body"), url).not.toContainText(SECTION_FALLBACK);
+    // Nothing wider than the 360 px screen (long pseudonyms included)
+    const width = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(width, `${url} déborde horizontalement`).toBeLessThanOrEqual(360);
   }
 
   // Log out from the account menu
@@ -58,6 +61,8 @@ test("sign up, browse, log out, log in, delete my data", async ({ page }) => {
 
   // Delete all her data
   await page.goto("/parametres");
+  // Sections above load their data after the first paint and move the button
+  await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: "Supprimer toutes mes données" }).click();
   await page.getByRole("button", { name: "Oui, supprimer tout maintenant" }).click();
   await expect(page.getByText(/définitivement\s+supprimées/)).toBeVisible();

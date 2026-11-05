@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="100" height="120" role="img" aria-label="Koko">
+  <!-- Master of the Koko mark (the arch-shaped door + the "knock" dot).
+       Same geometry and colours as the header logo (src/components/layout/Brand.tsx).
+       Every icon is generated from this file: npm run icons -->
+  <path d="M15 110V50C15 30.67 30.67 15 50 15C69.33 15 85 30.67 85 50V110" fill="none" stroke="#9e3b5a" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="62" cy="72" r="6" fill="#d98e73"/>
+</svg>

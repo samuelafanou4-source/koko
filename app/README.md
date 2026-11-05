@@ -164,6 +164,16 @@ npm run build
 npm start
 ```
 
+### 11. Logo et icônes
+- **Logo maître** : `public/brand/koko-mark.svg` (l'arche et le point « toc », mêmes formes et couleurs que le logo de l'en-tête dans `src/components/layout/Brand.tsx`). Le logo complet avec le mot « Koko » est `public/brand/koko-logo.svg`.
+- **Régénérer toutes les icônes** après une modification du logo :
+  ```bash
+  npm run icons
+  ```
+  Cette commande recrée le favicon (`src/app/favicon.ico`, `icon.svg`, `icon.png`), l'icône iOS (`apple-icon.png`), les icônes PWA (`public/icons/`) et l'image d'aperçu des liens (`opengraph-image.png`, `twitter-image.png`). Les polices utilisées (licence OFL) sont dans `assets/brand/fonts/`. Vérifie ensuite avec `npm test` (le test `tests/unit/icons.test.ts` contrôle les tailles, le manifeste et l'absence des icônes Next.js par défaut).
+- Si les icônes de `public/icons/` changent, augmente `CACHE_VERSION` dans `public/sw.js`.
+- **Les navigateurs gardent les favicons en cache très longtemps** (parfois plusieurs jours). Après un déploiement, une ancienne icône peut encore s'afficher : vide le cache ou ouvre le site en navigation privée pour vérifier, et réinstalle l'application sur l'écran d'accueil si besoin.
+
 ---
 
 ## 🛠️ Dépannage & FAQ

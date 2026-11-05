@@ -1,7 +1,7 @@
 {
-  "name": "Koko — Bien-être intime & confidentiel",
+  "name": "Koko",
   "short_name": "Koko",
-  "description": "Sanctuaire d'écoute active, de suivi de cycle et d'orientation médicale pour les jeunes femmes au Togo.",
+  "description": "Ton espace bien-être intime et confidentiel : écoute, suivi de cycle et orientation santé pour les jeunes femmes au Togo.",
   "start_url": "/tableau-de-bord",
   "scope": "/",
   "display": "standalone",
@@ -9,16 +9,10 @@
   "theme_color": "#9e3b5a",
   "lang": "fr",
   "icons": [
-    {
-      "src": "/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/monochrome-512.png", "sizes": "512x512", "type": "image/png", "purpose": "monochrome" }
   ]
 }
-

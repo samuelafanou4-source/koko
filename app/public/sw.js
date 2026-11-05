@@ -10,11 +10,18 @@
  *
  * Bump CACHE_VERSION to purge every older cache on all devices.
  */
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v4"; // v4: Koko icons replace the old placeholders
 const CACHE_NAME = `koko-static-${CACHE_VERSION}`;
 const OFFLINE_URL = "/offline";
 
-const PRECACHE_URLS = [OFFLINE_URL, "/manifest.json", "/icons/icon-192.png", "/icons/icon-512.png"];
+const PRECACHE_URLS = [
+  OFFLINE_URL,
+  "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/maskable-192.png",
+  "/icons/maskable-512.png",
+];
 
 // Paths whose responses may be stored (all public, none user-specific)
 const CACHEABLE_PREFIXES = ["/_next/static/", "/_next/image", "/icons/"];

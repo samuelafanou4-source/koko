@@ -136,6 +136,13 @@ describe("classifyRoute: static files", () => {
     "/robots.txt",
     "/sitemap.xml",
     "/favicon.ico",
+    "/icon.svg",
+    "/icon.png?a1b2c3",
+    "/apple-icon.png",
+    "/opengraph-image.png",
+    "/twitter-image.png",
+    "/brand/koko-logo.svg",
+    "/icons/maskable-512.png",
   ])("%s is static", (path) => {
     expect(classifyRoute(path)).toBe("static");
   });

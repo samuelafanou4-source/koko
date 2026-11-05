@@ -96,16 +96,17 @@ export default function ParametresPage() {
       {/* Account Info Card */}
       <SectionBoundary name="settings-account">
       <div className="rounded-2xl bg-surface-container-low p-6 border border-outline-variant/30 flex flex-col gap-4 shadow-xs">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-xl font-bold">
+        <div className="flex items-center justify-between gap-3">
+          {/* min-w-0 + break-all: a long pseudonym wraps instead of widening the page at 360 px */}
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-12 h-12 shrink-0 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-xl font-bold">
               🌸
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <span className="font-label text-label-xs text-on-surface-variant uppercase font-semibold">
                 Pseudonyme Actif
               </span>
-              <span className="font-headline text-headline-sm text-on-surface font-bold">
+              <span className="font-headline text-headline-sm text-on-surface font-bold break-all">
                 {user.pseudonym}
               </span>
             </div>
@@ -114,7 +115,7 @@ export default function ParametresPage() {
           <button
             onClick={handleLogout}
             type="button"
-            className="px-4 py-2 rounded-full border border-outline-variant/40 hover:bg-surface-container font-label text-label-sm text-on-surface transition-colors"
+            className="shrink-0 px-4 py-2 rounded-full border border-outline-variant/40 hover:bg-surface-container font-label text-label-sm text-on-surface transition-colors"
           >
             Se déconnecter
           </button>
